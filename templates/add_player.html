@@ -1,0 +1,44 @@
+<!-- templates/add_player.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Player</title>
+    <style>
+        label, input {
+            margin-bottom: 10px;
+            display: block;
+        }
+        input[type="submit"] {
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+        }
+        a {
+            text-decoration: none;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Add a New Player</h1>
+
+    <form method="POST">
+        <label for="name">Player Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+            <p><a href="{{ url_for('index') }}">Back to Standings</a></p>
+        {% else %}
+        <input type="submit" value="Add Player">
+        {% endif %}
+    </form>
+
+    <!-- Link to go back to the main standings page -->
+    <p><a href="{{ url_for('index') }}">Back to Standings</a></p>
+
+</body>
+</html>
