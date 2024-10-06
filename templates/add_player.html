@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add New Player</title>
+    <title>Add New Players</title>
     <style>
         label, input {
             margin-bottom: 10px;
@@ -23,17 +23,19 @@
 </head>
 <body>
 
-    <h1>Add a New Player</h1>
+    <h1>Add New Players</h1>
 
     <form method="POST">
-        <label for="name">Player Name:</label>
-        <input type="text" id="name" name="name" required>
+        {% for i in range(1, 9) %}
+            <label for="name{{ i }}">Player {{ i }}:</label>
+            <input type="text" id="name{{ i }}" name="name{{ i }}" value="Player {{ i }}" required>
+        {% endfor %}
 
         {% if error %}
             <div class="error">{{ error }}</div>
             <p><a href="{{ url_for('index') }}">Back to Standings</a></p>
         {% else %}
-        <input type="submit" value="Add Player">
+            <input type="submit" value="Add Players">
         {% endif %}
     </form>
 

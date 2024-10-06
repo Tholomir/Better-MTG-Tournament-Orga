@@ -22,15 +22,20 @@ def init_routes(app):
             return render_template('add_player.html', error=error)
 
         if request.method == 'POST':
-            name = request.form['name']
-            if name.strip():
-                player = Player(name=name.strip())
-                db.session.add(player)
-                db.session.commit()
+            players_added = 0
+            for i in range(1, 9):
+                name = request.form.get(f'name{i}')
+                if name and name.strip():
+                    player = Player(name=name.strip())
+                    db.session.add(player)
+                    players_added += 1
+            db.session.commit()
+            if players_added > 0:
                 return redirect(url_for('index'))
             else:
-                error = "Player name cannot be empty."
+                error = "At least one player name must be provided."
                 return render_template('add_player.html', error=error)
+
         return render_template('add_player.html')
 
     @app.route('/start_round')
