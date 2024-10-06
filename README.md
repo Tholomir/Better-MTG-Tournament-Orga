@@ -1,4 +1,4 @@
-# Tournament Management System
+# Draft Tournament Management System
 
 This is a web-based application for managing a tournament using a Swiss-system format. The application allows users to add players, start rounds, view standings, and manage the tournament lifecycle, including finals and resetting the tournament.
 
