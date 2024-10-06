@@ -223,3 +223,10 @@ class Tournament:
     def get_last_started_round(self):
         started_rounds = [match.round_number for match in Match.query.with_entities(Match.round_number).distinct()]
         return max(started_rounds) if started_rounds else 0
+
+    def reset(self):
+        # Delete all players
+        Player.query.delete()
+        # Delete all matches
+        Match.query.delete()
+        db.session.commit()

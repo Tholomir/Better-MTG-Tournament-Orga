@@ -1,6 +1,6 @@
 # routes.py
 
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, flash
 from models import db, Player, Match
 from tournament import Tournament
 
@@ -69,3 +69,9 @@ def init_routes(app):
     def finals():
         success = tournament.schedule_finals()
         return redirect(url_for('view_round', round_number=tournament.total_rounds + 1))
+
+    @app.route('/reset_tournament', methods=['POST'])
+    def reset_tournament():
+        tournament.reset()
+        flash("Tournament has been reset successfully.", "success")
+        return redirect(url_for('index'))

@@ -68,5 +68,10 @@
         {% endif %}
     {% endif %}
 
+    <!-- Add a button to reset the tournament -->
+    <form action="{{ url_for('reset_tournament') }}" method="POST" style="margin-top: 20px;">
+        <input type="submit" value="Reset Tournament" onclick="return confirm('Are you sure you want to reset the tournament? This action cannot be undone.');">
+    </form>
+
 </body>
 </html>
