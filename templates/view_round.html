@@ -73,7 +73,11 @@
         </form>
     </div>
 
-    <p><a href="{{ url_for('index') }}">Back to Standings</a></p>
+    <p>
+        <form action="{{ url_for('index') }}" method="GET">
+            <input type="submit" value="Back to Standings">
+        </form>
+    </p>
 
 </body>
 </html>
