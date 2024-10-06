@@ -20,32 +20,40 @@ This is a web-based application for managing a tournament using a Swiss-system f
 ## Installation
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/yourusername/tournament-management-system.git
    cd tournament-management-system
    ```
 
 2. **Create a virtual environment**:
+
    ```bash
    python -m venv venv
    ```
 
 3. **Activate the virtual environment**:
+
    - On Windows:
+
      ```bash
      venv\Scripts\activate
      ```
+
    - On macOS and Linux:
+
      ```bash
      source venv/bin/activate
      ```
 
 4. **Install the dependencies**:
+
    ```bash
    pip install -r requirements.txt
    ```
 
 5. **Set up the database**:
+
    ```bash
    flask db init
    flask db migrate
@@ -55,6 +63,7 @@ This is a web-based application for managing a tournament using a Swiss-system f
 ## Usage
 
 1. **Run the application**:
+
    ```bash
    flask run
    ```
@@ -90,4 +99,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Contact
 
 For any questions or feedback, please contact [your-email@example.com](mailto:your-email@example.com).
-
