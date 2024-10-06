@@ -1,5 +1,3 @@
-<!-- templates/view_round.html -->
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,23 +9,7 @@
         {% endif %}
          Pairings
     </title>
-    <style>
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-            padding: 10px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        input[type="number"] {
-            width: 50px;
-        }
-        a {
-            text-decoration: none;
-            color: blue;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
 
@@ -40,56 +22,57 @@
          Pairings
     </h1>
 
-    <form method="POST">
-        <table>
-            <tr>
-                <th>Player 1</th>
-                <th>Player 1 Score</th>
-                <th>Player 2</th>
-                <th>Player 2 Score</th>
-            </tr>
+    <div class="table-container">
+        <form method="POST">
+            <table>
+                <tr>
+                    <th>Player 1</th>
+                    <th>Player 1 Score</th>
+                    <th>Player 2</th>
+                    <th>Player 2 Score</th>
+                </tr>
 
-            {% for match in matches %}
-            <tr>
-                <td>{{ match.player1.name }}</td>
-                <td>
-                    {% if match.completed %}
-                        {{ match.player1_score }}
-                    {% else %}
-                        {% if match.player2 %}
-                            <input type="number" name="match_{{ match.id }}_p1_score" min="0" value="{{ match.player1_score or 0 }}">
-                        {% else %}
-                            {{ match.player1_score }}
-                        {% endif %}
-                    {% endif %}
-                </td>
-                <td>
-                    {% if match.player2 %}
-                        {{ match.player2.name }}
-                    {% else %}
-                        Bye
-                    {% endif %}
-                </td>
-                <td>
-                    {% if match.player2 %}
+                {% for match in matches %}
+                <tr>
+                    <td>{{ match.player1.name }}</td>
+                    <td>
                         {% if match.completed %}
-                            {{ match.player2_score }}
+                            {{ match.player1_score }}
                         {% else %}
-                            <input type="number" name="match_{{ match.id }}_p2_score" min="0" value="{{ match.player2_score or 0 }}">
+                            {% if match.player2 %}
+                                <input type="number" name="match_{{ match.id }}_p1_score" min="0" value="{{ match.player1_score or 0 }}">
+                            {% else %}
+                                {{ match.player1_score }}
+                            {% endif %}
                         {% endif %}
-                    {% else %}
-                        N/A
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
+                    </td>
+                    <td>
+                        {% if match.player2 %}
+                            {{ match.player2.name }}
+                        {% else %}
+                            Bye
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if match.player2 %}
+                            {% if match.completed %}
+                                {{ match.player2_score }}
+                            {% else %}
+                                <input type="number" name="match_{{ match.id }}_p2_score" min="0" value="{{ match.player2_score or 0 }}">
+                            {% endif %}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
 
-        <br>
-        <button type="submit">Submit Results</button>
-    </form>
+            <br>
+            <button type="submit">Submit Results</button>
+        </form>
+    </div>
 
-    <!-- Link to go back to the main standings page -->
     <p><a href="{{ url_for('index') }}">Back to Standings</a></p>
 
 </body>

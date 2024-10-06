@@ -1,65 +1,46 @@
-<!-- templates/index.html -->
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Tournament Standings</title>
-    <style>
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-            padding: 10px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        a {
-            text-decoration: none;
-            color: blue;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
 
     <h1>Current Tournament Standings</h1>
 
-    <table>
-        <tr>
-            <th>Rank</th>
-            <th>Player Name</th>
-            <th>Match Points</th>
-            <th>OMW% (Opponents' Match Win Percentage)</th>
-            <th>GW% (Game Win Percentage)</th>
-        </tr>
-        <!-- Loop through standings and display them -->
-        {% for idx, standing in enumerate(standings) %}
-        <tr>
-            <td>{{ idx + 1 }}</td>
-            <td>{{ standing.player.name }}</td>
-            <td>{{ standing.match_points }}</td>
-            <td>{{ (standing.opponents_match_win_percentage * 100) | round(2) }}%</td>
-            <td>{{ (standing.game_win_percentage * 100) | round(2) }}%</td>
-        </tr>
-        {% endfor %}
-    </table>
-
-    <!-- Display a link to add players -->
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Player Name</th>
+                <th>Match Points</th>
+                <th>OMW%</th>
+                <th>GW%</th>
+            </tr>
+            {% for idx, standing in enumerate(standings) %}
+            <tr>
+                <td>{{ idx + 1 }}</td>
+                <td>{{ standing.player.name }}</td>
+                <td>{{ standing.match_points }}</td>
+                <td>{{ (standing.opponents_match_win_percentage * 100) | round(2) }}%</td>
+                <td>{{ (standing.game_win_percentage * 100) | round(2) }}%</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 
     {% if tournament.get_last_started_round() == 0 %}
     <p><a href="{{ url_for('add_player') }}">Add Player</a></p>
-{% endif %}
+    {% endif %}
 
-    <!-- Display links to start rounds -->
     {% if next_round_number %}
     <p><a href="{{ url_for('start_round') }}">Start Round {{ next_round_number }}</a></p>
-{% endif %}
+    {% endif %}
 
-    <!-- If finals are ready to start -->
     {% if finals_ready and not champion %}
     <p><a href="{{ url_for('finals') }}">Proceed to Finals</a></p>
-{% endif %}
+    {% endif %}
 
-    <!-- Display champion if available -->
     {% if champion %}
         {% if champion == "Tie" %}
             <h2>The finals ended in a tie.</h2>
@@ -68,7 +49,6 @@
         {% endif %}
     {% endif %}
 
-    <!-- Add a button to reset the tournament -->
     <form action="{{ url_for('reset_tournament') }}" method="POST" style="margin-top: 20px;">
         <input type="submit" value="Reset Tournament" onclick="return confirm('Are you sure you want to reset the tournament? This action cannot be undone.');">
     </form>
