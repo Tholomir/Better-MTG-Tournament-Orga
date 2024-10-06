@@ -1,9 +1,15 @@
+<<<<<<< HEAD
+=======
 <!-- templates/index.html -->
 
+>>>>>>> b3578581c090fc30ad53dda721578121396b991d
 <!DOCTYPE html>
 <html>
 <head>
     <title>Tournament Standings</title>
+<<<<<<< HEAD
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+=======
     <style>
         table, th, td {
             border: 1px solid black;
@@ -18,11 +24,47 @@
             color: blue;
         }
     </style>
+>>>>>>> b3578581c090fc30ad53dda721578121396b991d
 </head>
 <body>
 
     <h1>Current Tournament Standings</h1>
 
+<<<<<<< HEAD
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Player Name</th>
+                <th>Match Points</th>
+                <th>OMW%</th>
+                <th>GW%</th>
+            </tr>
+            {% for idx, standing in enumerate(standings) %}
+            <tr>
+                <td>{{ idx + 1 }}</td>
+                <td>{{ standing.player.name }}</td>
+                <td>{{ standing.match_points }}</td>
+                <td>{{ (standing.opponents_match_win_percentage * 100) | round(2) }}%</td>
+                <td>{{ (standing.game_win_percentage * 100) | round(2) }}%</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    {% if tournament.get_last_started_round() == 0 %}
+    <p><a href="{{ url_for('add_player') }}">Add Player</a></p>
+    {% endif %}
+
+    {% if next_round_number %}
+    <p><a href="{{ url_for('start_round') }}">Start Round {{ next_round_number }}</a></p>
+    {% endif %}
+
+    {% if finals_ready and not champion %}
+    <p><a href="{{ url_for('finals') }}">Proceed to Finals</a></p>
+    {% endif %}
+
+=======
     <table>
         <tr>
             <th>Rank</th>
@@ -60,6 +102,7 @@
 {% endif %}
 
     <!-- Display champion if available -->
+>>>>>>> b3578581c090fc30ad53dda721578121396b991d
     {% if champion %}
         {% if champion == "Tie" %}
             <h2>The finals ended in a tie.</h2>
@@ -68,7 +111,10 @@
         {% endif %}
     {% endif %}
 
+<<<<<<< HEAD
+=======
     <!-- Add a button to reset the tournament -->
+>>>>>>> b3578581c090fc30ad53dda721578121396b991d
     <form action="{{ url_for('reset_tournament') }}" method="POST" style="margin-top: 20px;">
         <input type="submit" value="Reset Tournament" onclick="return confirm('Are you sure you want to reset the tournament? This action cannot be undone.');">
     </form>

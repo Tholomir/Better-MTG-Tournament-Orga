@@ -1,9 +1,15 @@
+<<<<<<< HEAD
+=======
 <!-- templates/add_player.html -->
 
+>>>>>>> b3578581c090fc30ad53dda721578121396b991d
 <!DOCTYPE html>
 <html>
 <head>
     <title>Add New Players</title>
+<<<<<<< HEAD
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+=======
     <style>
         label, input {
             margin-bottom: 10px;
@@ -20,21 +26,39 @@
             color: blue;
         }
     </style>
+>>>>>>> b3578581c090fc30ad53dda721578121396b991d
 </head>
 <body>
 
     <h1>Add New Players</h1>
 
     <form method="POST">
+<<<<<<< HEAD
+        <div class="form-group">
+            {% for i in range(1, 9) %}
+                <label for="name{{ i }}">Player {{ i }}:</label>
+                <input type="text" id="name{{ i }}" name="name{{ i }}" value="Player {{ i }}" required>
+            {% endfor %}
+        </div>
+        <input type="submit" value="Add Players">
+        
+=======
         {% for i in range(1, 9) %}
             <label for="name{{ i }}">Player {{ i }}:</label>
             <input type="text" id="name{{ i }}" name="name{{ i }}" value="Player {{ i }}" required>
         {% endfor %}
 
+>>>>>>> b3578581c090fc30ad53dda721578121396b991d
         {% if error %}
             <div class="error">{{ error }}</div>
             <p><a href="{{ url_for('index') }}">Back to Standings</a></p>
         {% else %}
+<<<<<<< HEAD
+            <p><a href="{{ url_for('index') }}">Back to Standings</a></p>
+        {% endif %}
+    </form>
+
+=======
             <input type="submit" value="Add Players">
         {% endif %}
     </form>
@@ -42,5 +66,6 @@
     <!-- Link to go back to the main standings page -->
     <p><a href="{{ url_for('index') }}">Back to Standings</a></p>
 
+>>>>>>> b3578581c090fc30ad53dda721578121396b991d
 </body>
 </html>
