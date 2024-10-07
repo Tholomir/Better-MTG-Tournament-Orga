@@ -1,5 +1,6 @@
 /instance
 /__pycache__
+.vscode/
 *.pyc
 *.pyo
 *.pyd
