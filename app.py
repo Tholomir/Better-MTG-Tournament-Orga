@@ -4,6 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from models import db
 from routes import init_routes
+import logging
 
 def create_app():
     app = Flask(__name__)
@@ -19,6 +20,12 @@ def create_app():
     with app.app_context():
         db.create_all()
         init_routes(app)
+
+    # Configure logging
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    # Set the logging level for Werkzeug to WARNING to reduce verbosity
+    logging.getLogger('werkzeug').setLevel(logging.WARNING)
 
     return app
 

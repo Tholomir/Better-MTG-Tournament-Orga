@@ -2,19 +2,62 @@
 
 from models import Player, Match, db
 import random
+import logging
 
 class Tournament:
     def __init__(self, total_rounds=3):
         self.total_rounds = total_rounds
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.DEBUG)  # Set to logging.DEBUG for more detailed logs or logging.INFO for less verbosity
+
+    def add_players_from_form(self, form_data):
+        self.logger.info("Starting to add players from form.")
+        players_added = 0
+        error = None
+        existing_players = {player.name for player in Player.query.all()}
+        new_players = set()
+        added_players = []
+
+        for i in range(1, 9):
+            name = form_data.get(f'name{i}')
+            if name and name.strip():
+                name = name.strip()
+                if name in existing_players or name in new_players:
+                    error = f"Player with name '{name}' already exists."
+                    self.logger.warning(error)
+                    break
+                new_players.add(name)
+
+        if len(existing_players) + len(new_players) > 8:
+            error = "Cannot add more than 8 players in total."
+            self.logger.warning(error)
+            return players_added, error
+
+        for name in new_players:
+            player = Player(name=name)
+            db.session.add(player)
+            players_added += 1
+            added_players.append(name)
+
+        db.session.commit()
+
+        if players_added == 0 and not error:
+            error = "At least one player name must be provided."
+            self.logger.warning(error)
+
+        self.logger.info(f"Players added: {players_added}. Names: {', '.join(added_players)}")
+        self.logger.info("Finished adding players from form.")
+        return players_added, error
 
     def start_round(self, round_number):
+        self.logger.info(f"Starting round {round_number}.")
         if Match.query.filter_by(round_number=round_number).first():
-            # Round already exists
+            self.logger.warning(f"Round {round_number} already exists.")
             return False
 
         players = Player.query.all()
         if len(players) < 2:
-            # Not enough players
+            self.logger.warning("Not enough players to start the round.")
             return False
 
         pairings = self.generate_pairings(round_number, players)
@@ -35,9 +78,11 @@ class Tournament:
                 )
             db.session.add(match)
         db.session.commit()
+        self.logger.info(f"Round {round_number} started successfully.")
         return True
 
     def generate_pairings(self, round_number, players):
+        self.logger.info(f"Generating pairings for round {round_number}.")
         if round_number == 1:
             # Random pairings for Round 1
             shuffled_players = players[:]
@@ -70,6 +115,7 @@ class Tournament:
                 if player not in paired_players:
                     pairings.append((player, None))
             return pairings
+        self.logger.info(f"Pairings for round {round_number} generated successfully.")
         return pairings
 
     def have_played_each_other(self, player1, player2):
@@ -82,6 +128,7 @@ class Tournament:
         return match is not None
 
     def submit_results(self, round_number, results):
+        self.logger.info(f"Submitting results for round {round_number}.")
         matches = Match.query.filter_by(round_number=round_number).all()
         for match in matches:
             if match.completed:
@@ -93,8 +140,10 @@ class Tournament:
                 match.completed = True
                 self.update_player_records(match, is_finals=(round_number == self.total_rounds + 1))
         db.session.commit()
+        self.logger.info(f"Results for round {round_number} submitted successfully.")
 
     def update_player_records(self, match, is_finals=False):
+        self.logger.info(f"Updating player records for match {match.id}.")
         player1 = Player.query.get(match.player1_id)
         player1.game_wins += match.player1_score
         player1.game_losses += match.player2_score
@@ -117,8 +166,10 @@ class Tournament:
             pass
 
         db.session.commit()
+        self.logger.info(f"Player records for match {match.id} updated successfully.")
 
     def calculate_standings(self):
+        self.logger.info("Calculating standings.")
         players = Player.query.all()
         standings = []
         for player in players:
@@ -136,6 +187,7 @@ class Tournament:
             x['opponents_match_win_percentage'],
             x['game_win_percentage']
         ), reverse=True)
+        self.logger.info("Standings calculated successfully.")
         return standings
 
     def calculate_gwp(self, player):
@@ -181,13 +233,14 @@ class Tournament:
         return None
 
     def schedule_finals(self):
+        self.logger.info("Scheduling finals.")
         if Match.query.filter_by(round_number=self.total_rounds + 1).first():
-            # Finals already scheduled
+            self.logger.warning("Finals already scheduled.")
             return False
 
         standings = self.calculate_standings()
         if len(standings) < 2:
-            # Not enough players
+            self.logger.warning("Not enough players to schedule finals.")
             return False
 
         top_two_players = standings[:2]
@@ -198,6 +251,7 @@ class Tournament:
         )
         db.session.add(final_match)
         db.session.commit()
+        self.logger.info("Finals scheduled successfully.")
         return True
 
     def is_round_completed(self, round_number):
@@ -225,8 +279,10 @@ class Tournament:
         return max(started_rounds) if started_rounds else 0
 
     def reset(self):
+        self.logger.info("Resetting tournament.")
         # Delete all players
         Player.query.delete()
         # Delete all matches
         Match.query.delete()
         db.session.commit()
+        self.logger.info("Tournament reset successfully.")
