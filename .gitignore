@@ -1,2 +1,9 @@
 /instance
 /__pycache__
+.vscode/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.code-workspace
+*.bak
