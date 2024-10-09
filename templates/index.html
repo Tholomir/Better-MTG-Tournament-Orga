@@ -24,75 +24,98 @@
     </nav>
     <!-- End of Navbar Section -->
 
-    <table class="table">
-      <tr>
-        <th>Rank</th>
-        <th>Player Name</th>
-        <th>Match Points</th>
-        <th>OMW%</th>
-        <th>GW%</th>
-      </tr>
-      {% for idx, standing in enumerate(standings) %}
-      <tr>
-        <td>{{ idx + 1 }}</td>
-        <td>{{ standing.player.name }}</td>
-        <td>{{ standing.match_points }}</td>
-        <td>
-          {{ (standing.opponents_match_win_percentage * 100) | round(2) }}%
-        </td>
-        <td>{{ (standing.game_win_percentage * 100) | round(2) }}%</td>
-      </tr>
-      {% endfor %}
-    </table>
+    <div class="grid-container">
+        <header class="header">
+       
+            {% if champion %} {% if champion == "Tie" %}
+            <h2>The finals ended in a tie.</h2>
+            {% else %}
+            <h2>Champion: {{ champion.name }}</h2>
+            {% endif %} {% endif %}
 
-    <form action="{{ url_for('add_player') }}" method="GET">
-      <input type="submit" class="button button-primary" value="Add Player" />
-      <!-- Added button classes -->
-    </form>
+            <div>
+                <a href="{{ url_for('generic') }}" class="button button-primary"
+                  >Go to Generic Web Frontend
+                  </a>
+              </div>
 
-    {% if next_round_number %}
-    <form action="{{ url_for('start_round') }}" method="GET">
-      <input
-        type="submit"
-        class="button button-primary"
-        value="Start Round {{ next_round_number }}"
-      />
-      <!-- Added button classes -->
-    </form>
-    {% endif %} {% if finals_ready and not champion %}
-    <form action="{{ url_for('finals') }}" method="GET">
-      <input
-        type="submit"
-        class="button button-primary"
-        value="Proceed to Finals"
-      />
-      <!-- Added button classes -->
-    </form>
-    {% endif %} {% if champion %} {% if champion == "Tie" %}
-    <h2>The finals ended in a tie.</h2>
-    {% else %}
-    <h2>Champion: {{ champion.name }}</h2>
-    {% endif %} {% endif %}
+              <form
+              action="{{ url_for('reset_tournament') }}"
+              method="POST"
+            >
+              <input
+                type="submit"
+                class="button button-tertiary"
+                value="Reset Tournament"
+                onclick="return confirm('Are you sure you want to reset the tournament? This action cannot be undone.');"
+              />
+            </form>
 
-    <form
-      action="{{ url_for('reset_tournament') }}"
-      method="POST"
-      style="margin-top: 20px"
-    >
-      <input
-        type="submit"
-        class="button button-secondary"
-        value="Reset Tournament"
-        onclick="return confirm('Are you sure you want to reset the tournament? This action cannot be undone.');"
-      />
-    </form>
+        </header>
+        <aside class="sidebar">
+            Sidebar
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+            <form action="{{ url_for('add_player') }}" method="GET">
+                <input type="submit" class="button button-primary" value="Add Player" />
+              </form>
 
-    <!-- Link to the Generic Web Frontend -->
-    <div style="margin-top: 20px">
-      <a href="{{ url_for('generic') }}" class="button button-primary"
-        >Go to Generic Web Frontend</a
-      >
-      <!-- Added button classes -->
-    </div>
+            
+        </aside>
+
+        <main class="main1">
+            Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+            
+            {% if next_round_number %}
+            <form action="{{ url_for('start_round') }}" method="GET">
+              <input
+                type="submit"
+                class="button button-primary"
+                value="Start Round {{ next_round_number }}"
+              />
+            </form>
+            {% endif %}
+
+            {% if finals_ready and not champion %}
+            <form action="{{ url_for('finals') }}" method="GET">
+              <input
+                type="submit"
+                class="button button-primary"
+                value="Proceed to Finals"
+              />
+            </form>
+            {% endif %}
+        </main>
+
+        <main class="main2">
+            <table class="table">
+                <tr>
+                  <th>Rank</th>
+                  <th>Player Name</th>
+                  <th>Match Points</th>
+                  <th>OMW%</th>
+                  <th>GW%</th>
+                </tr>
+                {% for idx, standing in enumerate(standings) %}
+                <tr>
+                  <td>{{ idx + 1 }}</td>
+                  <td>{{ standing.player.name }}</td>
+                  <td>{{ standing.match_points }}</td>
+                  <td>
+                    {{ (standing.opponents_match_win_percentage * 100) | round(2) }}%
+                  </td>
+                  <td>{{ (standing.game_win_percentage * 100) | round(2) }}%</td>
+                </tr>
+                {% endfor %}
+              </table>
+
+        </main>
+
+        <footer class="footer">
+            Footer
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+        </footer>
+      </div>
+           
+
   </body>
 </html>
