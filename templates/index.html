@@ -1,68 +1,98 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Tournament Standings</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <!-- Navbar Section -->
+    <nav class="navbar">
+      <div class="navbar-logo">
+        <img src="static/TournamentOrgaApp_icon.png" alt="Logo" class="icon-button" />
+        <!-- Placeholder for an icon -->
+      </div>
+      <div class="navbar-links">
+        <a href="{{ url_for('add_player') }}" class="navbar-link">Players</a>
+        <a href="{{ url_for('generic') }}" class="navbar-link">Standings</a>
+        <a href="{{ url_for('index') }}" class="navbar-link">Home</a>
+      </div>
+      <div class="navbar-profile"></div>
+    </nav>
+    <!-- End of Navbar Section -->
 
-    <h1 class="highlight">Current Tournament Standings</h1> <!-- Added highlight class -->
-
-    <div class="table-container">
-        <table class="table"> <!-- Added table class -->
-            <tr>
-                <th>Rank</th>
-                <th>Player Name</th>
-                <th>Match Points</th>
-                <th>OMW%</th>
-                <th>GW%</th>
-            </tr>
-            {% for idx, standing in enumerate(standings) %}
-            <tr>
-                <td>{{ idx + 1 }}</td>
-                <td>{{ standing.player.name }}</td>
-                <td>{{ standing.match_points }}</td>
-                <td>{{ (standing.opponents_match_win_percentage * 100) | round(2) }}%</td>
-                <td>{{ (standing.game_win_percentage * 100) | round(2) }}%</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
+    <table class="table">
+      <tr>
+        <th>Rank</th>
+        <th>Player Name</th>
+        <th>Match Points</th>
+        <th>OMW%</th>
+        <th>GW%</th>
+      </tr>
+      {% for idx, standing in enumerate(standings) %}
+      <tr>
+        <td>{{ idx + 1 }}</td>
+        <td>{{ standing.player.name }}</td>
+        <td>{{ standing.match_points }}</td>
+        <td>
+          {{ (standing.opponents_match_win_percentage * 100) | round(2) }}%
+        </td>
+        <td>{{ (standing.game_win_percentage * 100) | round(2) }}%</td>
+      </tr>
+      {% endfor %}
+    </table>
 
     <form action="{{ url_for('add_player') }}" method="GET">
-        <input type="submit" class="button button-primary" value="Add Player"> <!-- Added button classes -->
-        <br>
-        <br>
+      <input type="submit" class="button button-primary" value="Add Player" />
+      <!-- Added button classes -->
     </form>
 
     {% if next_round_number %}
     <form action="{{ url_for('start_round') }}" method="GET">
-        <input type="submit" class="button button-primary" value="Start Round {{ next_round_number }}"> <!-- Added button classes -->
+      <input
+        type="submit"
+        class="button button-primary"
+        value="Start Round {{ next_round_number }}"
+      />
+      <!-- Added button classes -->
     </form>
-    {% endif %}
-
-    {% if finals_ready and not champion %}
+    {% endif %} {% if finals_ready and not champion %}
     <form action="{{ url_for('finals') }}" method="GET">
-        <input type="submit" class="button button-primary" value="Proceed to Finals"> <!-- Added button classes -->
+      <input
+        type="submit"
+        class="button button-primary"
+        value="Proceed to Finals"
+      />
+      <!-- Added button classes -->
     </form>
-    {% endif %}
+    {% endif %} {% if champion %} {% if champion == "Tie" %}
+    <h2>The finals ended in a tie.</h2>
+    {% else %}
+    <h2>Champion: {{ champion.name }}</h2>
+    {% endif %} {% endif %}
 
-    {% if champion %}
-        {% if champion == "Tie" %}
-            <h2>The finals ended in a tie.</h2>
-        {% else %}
-            <h2>Champion: {{ champion.name }}</h2>
-        {% endif %}
-    {% endif %}
-
-    <form action="{{ url_for('reset_tournament') }}" method="POST" style="margin-top: 20px;">
-        <input type="submit" class="button button-secondary" value="Reset Tournament" onclick="return confirm('Are you sure you want to reset the tournament? This action cannot be undone.');"> <!-- Added button classes -->
+    <form
+      action="{{ url_for('reset_tournament') }}"
+      method="POST"
+      style="margin-top: 20px"
+    >
+      <input
+        type="submit"
+        class="button button-secondary"
+        value="Reset Tournament"
+        onclick="return confirm('Are you sure you want to reset the tournament? This action cannot be undone.');"
+      />
     </form>
 
     <!-- Link to the Generic Web Frontend -->
-    <div style="margin-top: 20px;">
-        <a href="{{ url_for('generic') }}" class="button button-primary">Go to Generic Web Frontend</a> <!-- Added button classes -->
+    <div style="margin-top: 20px">
+      <a href="{{ url_for('generic') }}" class="button button-primary"
+        >Go to Generic Web Frontend</a
+      >
+      <!-- Added button classes -->
     </div>
-
-</body>
+  </body>
 </html>

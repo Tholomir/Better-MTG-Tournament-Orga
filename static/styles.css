@@ -294,8 +294,17 @@
   .navbar-logo {
       font-size: 1.5rem;
       font-weight: 700;
+      height: 100%; /* Ensure the logo fits the height of the navbar */
+      display: flex; /* Use flex to center the image vertically */
+      align-items: center; /* Center the image vertically */
   }
-  
+
+  /* Add this rule for the image inside the navbar logo */
+  .navbar-logo img {
+      height: 100%; /* Make the image fit the height of the navbar */
+      width: auto; /* Maintain aspect ratio */
+  }
+
   .navbar-links {
       display: flex;
       gap: 16px;
@@ -411,4 +420,3 @@
   @keyframes spin {
       to { transform: rotate(360deg); }
   }
-  
