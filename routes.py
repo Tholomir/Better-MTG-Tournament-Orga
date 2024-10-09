@@ -72,3 +72,7 @@ def init_routes(app):
         tournament.reset()
         flash("Tournament has been reset successfully.", "success")
         return redirect(url_for('index'))
+
+    @app.route('/generic', methods=['GET'])
+    def generic():
+        return render_template('generic.html')  # Render the generic template

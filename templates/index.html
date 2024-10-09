@@ -6,10 +6,10 @@
 </head>
 <body>
 
-    <h1>Current Tournament Standings</h1>
+    <h1 class="highlight">Current Tournament Standings</h1> <!-- Added highlight class -->
 
     <div class="table-container">
-        <table>
+        <table class="table"> <!-- Added table class -->
             <tr>
                 <th>Rank</th>
                 <th>Player Name</th>
@@ -30,20 +30,20 @@
     </div>
 
     <form action="{{ url_for('add_player') }}" method="GET">
-        <input type="submit" value="Add Player">
+        <input type="submit" class="button button-primary" value="Add Player"> <!-- Added button classes -->
         <br>
         <br>
     </form>
 
     {% if next_round_number %}
     <form action="{{ url_for('start_round') }}" method="GET">
-        <input type="submit" value="Start Round {{ next_round_number }}">
+        <input type="submit" class="button button-primary" value="Start Round {{ next_round_number }}"> <!-- Added button classes -->
     </form>
     {% endif %}
 
     {% if finals_ready and not champion %}
     <form action="{{ url_for('finals') }}" method="GET">
-        <input type="submit" value="Proceed to Finals">
+        <input type="submit" class="button button-primary" value="Proceed to Finals"> <!-- Added button classes -->
     </form>
     {% endif %}
 
@@ -56,8 +56,13 @@
     {% endif %}
 
     <form action="{{ url_for('reset_tournament') }}" method="POST" style="margin-top: 20px;">
-        <input type="submit" value="Reset Tournament" onclick="return confirm('Are you sure you want to reset the tournament? This action cannot be undone.');">
+        <input type="submit" class="button button-secondary" value="Reset Tournament" onclick="return confirm('Are you sure you want to reset the tournament? This action cannot be undone.');"> <!-- Added button classes -->
     </form>
+
+    <!-- Link to the Generic Web Frontend -->
+    <div style="margin-top: 20px;">
+        <a href="{{ url_for('generic') }}" class="button button-primary">Go to Generic Web Frontend</a> <!-- Added button classes -->
+    </div>
 
 </body>
 </html>

@@ -13,7 +13,7 @@
 </head>
 <body>
 
-    <h1>
+    <h1 class="highlight">
         {% if matches[0].round_number == tournament.total_rounds + 1 %}
             Finals
         {% else %}
@@ -24,7 +24,7 @@
 
     <div class="table-container">
         <form method="POST">
-            <table>
+            <table class="table">
                 <tr>
                     <th>Player 1</th>
                     <th>Player 1 Score</th>
@@ -40,7 +40,7 @@
                             {{ match.player1_score }}
                         {% else %}
                             {% if match.player2 %}
-                                <input type="number" name="match_{{ match.id }}_p1_score" min="0" value="{{ match.player1_score or 0 }}">
+                                <input type="number" name="match_{{ match.id }}_p1_score" min="0" value="{{ match.player1_score or 0 }}" class="input-field">
                             {% else %}
                                 {{ match.player1_score }}
                             {% endif %}
@@ -58,7 +58,7 @@
                             {% if match.completed %}
                                 {{ match.player2_score }}
                             {% else %}
-                                <input type="number" name="match_{{ match.id }}_p2_score" min="0" value="{{ match.player2_score or 0 }}">
+                                <input type="number" name="match_{{ match.id }}_p2_score" min="0" value="{{ match.player2_score or 0 }}" class="input-field">
                             {% endif %}
                         {% else %}
                             N/A
@@ -69,13 +69,13 @@
             </table>
 
             <br>
-            <button type="submit">Submit Results</button>
+            <button type="submit" class="button button-primary">Submit Results</button>
         </form>
     </div>
 
     <p>
         <form action="{{ url_for('index') }}" method="GET">
-            <input type="submit" value="Back to Standings">
+            <input type="submit" value="Back to Standings" class="button button-secondary">
         </form>
     </p>
 
