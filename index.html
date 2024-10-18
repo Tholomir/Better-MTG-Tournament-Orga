@@ -43,11 +43,36 @@
     <div class="row">
       <div class="col-sm-3 border">
         <h3>Column 1</h3>
+        <md-filled-tonal-icon-button>
+          <md-icon>person_add</md-icon>
+        </md-filled-tonal-icon-button>
+
+        <!-- this is the dropdown for vert icon -->
+<span style="position: relative">
+  <md-icon  id="usage-anchor">more_vert</md-icon>
+  <md-menu id="usage-menu" anchor="usage-anchor">
+    <md-menu-item>
+      Edit <md-icon slot="end">edit</md-icon>
+    </md-menu-item>
+    <md-menu-item>
+      Remove <md-icon slot="end">delete</md-icon>
+    </md-menu-item>
+  </md-menu>
+</span>
+
+<script type="module">
+  // This example uses anchor as an ID reference
+  const anchorEl = document.body.querySelector('#usage-anchor');
+  const menuEl = document.body.querySelector('#usage-menu');
+
+  anchorEl.addEventListener('click', () => { menuEl.open = !menuEl.open; });
+</script>
 
         <!-- Player List Placeholder -->
         <md-list id="playerList">
           <!-- Player list items will be generated dynamically -->
         </md-list>
+
       </div>
 
       <div class="col-sm-4 border">
@@ -150,7 +175,6 @@
               console.error('Tournament not found');
               return;
             }
-
             // Get the list of player_ids for the tournament
             const playerIds = selectedTournament.players;
 
@@ -178,6 +202,12 @@
               iconEl.setAttribute('slot', 'start');
               iconEl.textContent = player.icon || 'person';
               listItem.appendChild(iconEl);
+
+              // Add a more_vert icon to the end of the list item
+              const endIcon = document.createElement('md-icon');
+              endIcon.setAttribute('slot', 'end');
+              endIcon.textContent = 'more_vert';
+              listItem.appendChild(endIcon);
 
               // Append the list item to the player list
               playerListEl.appendChild(listItem);
