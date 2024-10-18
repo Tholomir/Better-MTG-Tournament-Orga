@@ -1,0 +1,120 @@
+/* styles.css */
+
+/* Import Google Fonts for typography */
+@import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+/* Import light and dark theme styles based on user's color scheme preference */
+@import url(light.css) (prefers-color-scheme: light);
+@import url(dark.css) (prefers-color-scheme: dark);
+
+/* Root Variables for consistent theming */
+:root {
+    /* Font settings for brand and plain text */
+    --md-ref-typeface-brand: 'Cabin', sans-serif;
+    --md-ref-typeface-plain: 'Cabin', sans-serif;
+
+    /* Background and text color variables */
+    background: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+    font-family: var(--md-ref-typeface-plain);
+    font-size: 14px; /* Base font size */
+}
+
+/* Global Styles for html and body */
+html,
+body {
+    margin: 0; /* Remove default margin */
+}
+
+/* Main container styling */
+.main {
+    margin: 0 auto; /* Center the main container */
+    max-width: 1920px; /* Maximum width for large screens */
+    padding: 1rem; /* Padding around the content */
+    /* overflow-y: auto; */ /* Uncomment to enable vertical scrolling if content overflows */
+}
+
+/* Circle class for circular elements */
+.circle {
+    border-radius: 50%; /* Make elements circular */
+}
+
+/* Flexbox utility class */
+.flex {
+    display: flex; /* Enable flexbox layout */
+}
+
+/* Column layout utility class */
+.col {
+    flex-direction: column; /* Stack children vertically */
+}
+
+/* Centering utility class */
+.center {
+    display: flex; /* Enable flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+/* Gap utility class for spacing */
+.g8 {
+    border: 8px; /* Space between flex items */
+}
+
+/* Padding utility class */
+.p16 {
+    padding: 16px; /* Padding around elements */
+}
+
+/* Media queries for responsive design */
+
+/* Styles for screens wider than or equal to 840px */
+@media (width >=840px) {
+    .fabBottom {
+        bottom: 16px; /* Positioning for floating action button */
+    }
+}
+
+/* Styles for screens narrower than 600px */
+@media (width < 600px) {
+    :is(.medium, .expanded):not(.compact) {
+        display: none; /* Hide medium and expanded elements if not compact */
+    }
+
+    .gte-medium {
+        display: none; /* Hide elements that are greater than or equal to medium */
+    }
+}
+
+/* Styles for screens between 600px and 840px */
+@media (width >=600px) and (width < 840px) {
+    :is(.compact, .expanded):not(.medium) {
+        display: none; /* Hide compact and expanded elements if not medium */
+    }
+}
+
+/* Styles for screens narrower than 840px */
+@media (width < 840px) {
+    .gte-expanded {
+        display: none; /* Hide elements that are greater than or equal to expanded */
+    }
+}
+
+/* Styles for screens wider than or equal to 840px */
+@media (width >=840px) {
+    :is(.compact, .medium):not(.expanded) {
+        display: none; /* Hide compact and medium elements if not expanded */
+    }
+
+    .gte-expanded {
+        display: block; /* Show elements that are greater than or equal to expanded */
+    }
+}
+
+/* Styles for screens wider than or equal to 600px */
+@media (width >=600px) {
+    .gte-medium {
+        display: block; /* Show elements that are greater than or equal to medium */
+    }
+}

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Vue learning</title>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+  <!-- Link to own CSS styles -->
+  <link rel="stylesheet" href="./css/styles.css" />
+
+<!-- Bootstrap 5 Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap 5 Latest compiled JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Import map for material loading -->
+  <script type="importmap">
+        {
+          "imports": {
+            "lit": "https://cdn.jsdelivr.net/npm/lit@3/index.js",
+            "lit/": "https://cdn.jsdelivr.net/npm/lit@3/",
+            "@lit/localize": "https://cdn.jsdelivr.net/npm/@lit/localize/lit-localize.js",
+            "@lit/reactive-element": "https://cdn.jsdelivr.net/npm/@lit/reactive-element@1/reactive-element.js",
+            "@lit/reactive-element/": "https://cdn.jsdelivr.net/npm/@lit/reactive-element@1/",
+            "lit-element/lit-element.js": "https://cdn.jsdelivr.net/npm/lit-element@4/lit-element.js",
+            "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@3/lit-html.js",
+            "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@3/",
+            "tslib": "https://cdn.jsdelivr.net/npm/tslib@2/tslib.es6.mjs",
+            "material/": "../material/"
+          }
+        }
+      </script>
+</head>
+
+<body>
+
+  <!-- Main layout structure -->
+    <!-- Main content area -->
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-sm-3 border">
+        <h3>Column 1</h3>
+
+        <!-- Player List Placeholder -->
+        <md-list id="playerList">
+          <!-- Player list items will be generated dynamically -->
+        </md-list>
+
+
+      </div>
+
+      <div class="col-sm-4 border">
+        <h3>Column 2</h3>
+
+        <span style="position: relative; display: inline-block;">
+          <md-outlined-text-field 
+            type="search" 
+            placeholder="Search for Tournaments" 
+            id="tournamentSearchField">
+            <md-icon slot="trailing-icon">arrow_drop_down</md-icon>
+          </md-outlined-text-field>
+          
+          <md-menu id="tournamentMenu" anchor="tournamentSearchField">
+            <!-- Menu items will be generated dynamically -->
+          </md-menu>
+        </span>
+        
+
+
+        <script type="module">
+          // State variables to store selected tournament_id and data
+          let selectedTournamentId = null;
+          let tournamentData = null;
+          let playerData = null;
+        
+          // Select elements by their IDs using '#'
+          const anchorEl = document.querySelector('#tournamentSearchField');
+          const menuEl = document.querySelector('#tournamentMenu');
+          const playerListEl = document.querySelector('#playerList');
+        
+          // Function to toggle the menu
+          const toggleMenu = () => { 
+            menuEl.open = !menuEl.open; 
+          };
+        
+          // Add a click event listener to toggle the menu
+          anchorEl.addEventListener('click', (event) => { 
+            event.stopPropagation(); // Prevent the document click listener from immediately closing the menu
+            toggleMenu(); 
+          });
+        
+          // Function to fetch JSON data
+          async function fetchData(url) {
+            const response = await fetch(url);
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return await response.json();
+          }
+        
+          // Function to load tournament and player data
+          async function loadData() {
+            try {
+              // Fetch both tournaments and players data in parallel
+              [tournamentData, playerData] = await Promise.all([
+                fetchData('data/Tournaments.JSON'),
+                fetchData('data/Players.JSON')
+              ]);
+        
+              // Generate the tournament menu items
+              generateTournamentMenuItems(tournamentData.tournaments);
+            } catch (error) {
+              console.error('Error fetching data:', error);
+            }
+          }
+        
+          // Function to generate tournament menu items
+          function generateTournamentMenuItems(tournaments) {
+            tournaments.forEach(tournament => {
+              const menuItem = document.createElement('md-menu-item');
+              const headlineDiv = document.createElement('div');
+              headlineDiv.setAttribute('slot', 'headline');
+              headlineDiv.textContent = tournament.name;
+              menuItem.appendChild(headlineDiv);
+        
+              // Store the tournament_id as a data attribute
+              menuItem.dataset.tournamentId = tournament.tournament_id;
+        
+              // Add event listener to handle selection
+              menuItem.addEventListener('click', () => {
+                anchorEl.value = tournament.name; // Set the text field's value to the selected tournament name
+                selectedTournamentId = tournament.tournament_id; // Store the tournament_id
+                menuEl.open = false; // Close the menu
+        
+                // Generate the player list for the selected tournament
+                generatePlayerList(selectedTournamentId);
+              });
+        
+              menuEl.appendChild(menuItem);
+            });
+          }
+        
+          // Function to generate the player list
+          function generatePlayerList(tournamentId) {
+            // Clear any existing player list items
+            playerListEl.innerHTML = '';
+        
+            // Find the selected tournament
+            const selectedTournament = tournamentData.tournaments.find(t => t.tournament_id === tournamentId);
+            if (!selectedTournament) {
+              console.error('Tournament not found');
+              return;
+            }
+        
+            // Get the list of player_ids for the tournament
+            const playerIds = selectedTournament.players;
+        
+            // Filter player data to include only players in the tournament
+            const playersInTournament = playerData.players.filter(player => playerIds.includes(player.player_id));
+        
+            // Generate list items for each player
+            playersInTournament.forEach((player, index) => {
+              const listItem = document.createElement('md-list-item');
+        
+              // Headline (Player's Full Name)
+              const headlineDiv = document.createElement('div');
+              headlineDiv.setAttribute('slot', 'headline');
+              headlineDiv.textContent = player.full_name;
+              listItem.appendChild(headlineDiv);
+        
+              // Supporting Text (First Achievement or Default Text)
+              const supportingTextDiv = document.createElement('div');
+              supportingTextDiv.setAttribute('slot', 'supporting-text');
+              supportingTextDiv.textContent = player.achievements[0] || 'No Achievements';
+              listItem.appendChild(supportingTextDiv);
+        
+              // Icon (Player's Icon)
+              const iconEl = document.createElement('md-icon');
+              iconEl.setAttribute('slot', 'start');
+              iconEl.textContent = player.icon || 'person';
+              listItem.appendChild(iconEl);
+        
+              // Append the list item to the player list
+              playerListEl.appendChild(listItem);
+        
+              // Add a divider except after the last item
+              if (index < playersInTournament.length - 1) {
+                const divider = document.createElement('md-divider');
+                playerListEl.appendChild(divider);
+              }
+            });
+          }
+        
+          // Optional: Close the menu when clicking outside
+          document.addEventListener('click', (event) => {
+            if (!anchorEl.contains(event.target) && !menuEl.contains(event.target)) {
+              menuEl.open = false;
+            }
+          });
+        
+          // Load data when the page loads
+          loadData();
+        </script>
+        
+        
+
+      </div>
+      <div class="col-sm-5 border">
+        <h3>Column 3</h3>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- script section goes here -->
+
+  <script>
+
+
+  </script>
+
+    <!-- This section always goes last -->
+  <!-- Importing Material Design components -->
+  <script type="module">
+    import '/material/button/elevated-button.js';
+    import '/material/button/filled-button.js';
+    import '/material/button/filled-tonal-button.js';
+    import '/material/button/outlined-button.js';
+    import '/material/button/text-button.js';
+    import '/material/checkbox/checkbox.js';
+    import '/material/chips/assist-chip.js';
+    import '/material/chips/chip-set.js';
+    import '/material/chips/filter-chip.js';
+    import '/material/chips/input-chip.js';
+    import '/material/chips/suggestion-chip.js';
+    import '/material/dialog/dialog.js';
+    import '/material/divider/divider.js';
+    import '/material/elevation/elevation.js';
+    import '/material/fab/branded-fab.js';
+    import '/material/fab/fab.js';
+    import '/material/field/filled-field.js';
+    import '/material/field/outlined-field.js';
+    import '/material/focus/md-focus-ring.js';
+    import '/material/icon/icon.js';
+    import '/material/iconbutton/filled-icon-button.js';
+    import '/material/iconbutton/filled-tonal-icon-button.js';
+    import '/material/iconbutton/icon-button.js';
+    import '/material/iconbutton/outlined-icon-button.js';
+    import '/material/list/list.js';
+    import '/material/list/list-item.js';
+    import '/material/menu/menu.js';
+    import '/material/menu/menu-item.js';
+    import '/material/menu/sub-menu.js';
+    import '/material/progress/circular-progress.js';
+    import '/material/progress/linear-progress.js';
+    import '/material/radio/radio.js';
+    import '/material/ripple/ripple.js';
+    import '/material/select/filled-select.js';
+    import '/material/select/outlined-select.js';
+    import '/material/select/select-option.js';
+    import '/material/slider/slider.js';
+    import '/material/switch/switch.js';
+    import '/material/tabs/primary-tab.js';
+    import '/material/tabs/secondary-tab.js';
+    import '/material/tabs/tabs.js';
+    import '/material/textfield/filled-text-field.js';
+    import '/material/textfield/outlined-text-field.js';
+  </script>
+
+</body>
+
+</html>
