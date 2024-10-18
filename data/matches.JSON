@@ -1,334 +1,304 @@
 {
-    "matches": [
-      {
-        "match_id": 1001,
-        "date": "2024-07-01T10:00:00Z",
-        "tournament_id": 101,
-        "round": 1,
-        "player1_id": 1,
-        "player2_id": 4,
-        "score_player1": 1,
-        "score_player2": 0
-      },
-      {
-        "match_id": 1002,
-        "tournament_id": 101,
-        "round": 1,
-        "player1_id": 2,
-        "player2_id": 5,
-        "result": "draw",
-        "date": "2024-07-01T10:00:00Z",
-        "score_player1": 0.5,
-        "score_player2": 0.5
-      },
-      {
-        "match_id": 1003,
-        "tournament_id": 101,
-        "round": 1,
-        "player1_id": 3,
-        "player2_id": 6,
-        "result": "player2_win",
-        "date": "2024-07-01T10:00:00Z",
-        "score_player1": 0,
-        "score_player2": 1
-      },
-      {
-        "match_id": 1004,
-        "tournament_id": 101,
-        "round": 2,
-        "player1_id": 1,
-        "player2_id": 6,
-        "result": "draw",
-        "date": "2024-07-03T10:00:00Z",
-        "score_player1": 0.5,
-        "score_player2": 0.5
-      },
-      {
-        "match_id": 1005,
-        "tournament_id": 101,
-        "round": 2,
-        "player1_id": 2,
-        "player2_id": 5,
-        "result": "player2_win",
-        "date": "2024-07-03T10:00:00Z",
-        "score_player1": 0,
-        "score_player2": 1
-      },
-      {
-        "match_id": 1006,
-        "tournament_id": 101,
-        "round": 2,
-        "player1_id": 3,
-        "player2_id": 4,
-        "result": "player1_win",
-        "date": "2024-07-03T10:00:00Z",
-        "score_player1": 1,
-        "score_player2": 0
-      },
-      {
-        "match_id": 1007,
-        "tournament_id": 101,
-        "round": 3,
-        "player1_id": 1,
-        "player2_id": 5,
-        "result": "pending",
-        "date": "2024-07-05T10:00:00Z",
-        "score_player1": null,
-        "score_player2": null
-      },
-      {
-        "match_id": 1008,
-        "tournament_id": 101,
-        "round": 3,
-        "player1_id": 6,
-        "player2_id": 3,
-        "result": "pending",
-        "date": "2024-07-05T10:00:00Z",
-        "score_player1": null,
-        "score_player2": null
-      },
-      {
-        "match_id": 1009,
-        "tournament_id": 101,
-        "round": 3,
-        "player1_id": 2,
-        "player2_id": 4,
-        "result": "pending",
-        "date": "2024-07-05T10:00:00Z",
-        "score_player1": null,
-        "score_player2": null
-      },
-      {
-        "match_id": 2001,
-        "tournament_id": 102,
-        "round": 1,
-        "player1_id": 2,
-        "player2_id": 6,
-        "result": "pending",
-        "date": "2024-08-05T09:00:00Z",
-        "score_player1": null,
-        "score_player2": null
-      },
-      {
-        "match_id": 2002,
-        "tournament_id": 102,
-        "round": 2,
-        "player1_id": 6,
-        "player2_id": 7,
-        "result": "pending",
-        "date": "2024-08-07T09:00:00Z",
-        "score_player1": null,
-        "score_player2": null
-      },
-      {
-        "match_id": 2003,
-        "tournament_id": 102,
-        "round": 3,
-        "player1_id": 2,
-        "player2_id": 7,
-        "result": "pending",
-        "date": "2024-08-09T09:00:00Z",
-        "score_player1": null,
-        "score_player2": null
-      },
-      {
-        "match_id": 3001,
-        "tournament_id": 103,
-        "round": 1,
-        "player1_id": 1,
-        "player2_id": 5,
-        "result": "player2_win",
-        "date": "2024-10-01T10:00:00Z",
-        "score_player1": 0,
-        "score_player2": 1
-      },
-      {
-        "match_id": 3002,
-        "tournament_id": 103,
-        "round": 1,
-        "player1_id": 3,
-        "player2_id": 6,
-        "result": "draw",
-        "date": "2024-10-01T10:00:00Z",
-        "score_player1": 0.5,
-        "score_player2": 0.5
-      },
-      {
-        "match_id": 3003,
-        "tournament_id": 103,
-        "round": 1,
-        "player1_id": 7,
-        "player2_id": null,
-        "result": "bye",
-        "date": "2024-10-01T10:00:00Z",
-        "score_player1": 1,
-        "score_player2": 0
-      },
-      {
-        "match_id": 3004,
-        "tournament_id": 103,
-        "round": 2,
-        "player1_id": 5,
-        "player2_id": 7,
-        "result": "player1_win",
-        "date": "2024-10-03T10:00:00Z",
-        "score_player1": 1,
-        "score_player2": 0
-      },
-      {
-        "match_id": 3005,
-        "tournament_id": 103,
-        "round": 2,
-        "player1_id": 3,
-        "player2_id": 6,
-        "result": "player1_win",
-        "date": "2024-10-03T10:00:00Z",
-        "score_player1": 1,
-        "score_player2": 0
-      },
-      {
-        "match_id": 3006,
-        "tournament_id": 103,
-        "round": 2,
-        "player1_id": 1,
-        "player2_id": null,
-        "result": "bye",
-        "date": "2024-10-03T10:00:00Z",
-        "score_player1": 1,
-        "score_player2": 0
-      },
-      {
-        "match_id": 3007,
-        "tournament_id": 103,
-        "round": 3,
-        "player1_id": 5,
-        "player2_id": 3,
-        "result": "player3_win",
-        "date": "2024-10-05T10:00:00Z",
-        "score_player1": 0,
-        "score_player2": 1
-      },
-      {
-        "match_id": 3008,
-        "tournament_id": 103,
-        "round": 3,
-        "player1_id": 1,
-        "player2_id": 7,
-        "result": "player2_win",
-        "date": "2024-10-05T10:00:00Z",
-        "score_player1": 0,
-        "score_player2": 1
-      },
-      {
-        "match_id": 3009,
-        "tournament_id": 103,
-        "round": 3,
-        "player1_id": 6,
-        "player2_id": null,
-        "result": "bye",
-        "date": "2024-10-05T10:00:00Z",
-        "score_player1": 1,
-        "score_player2": 0
-      },
-      {
-        "match_id": 4001,
-        "tournament_id": 104,
-        "round": 1,
-        "player1_id": 1,
-        "player2_id": 2,
-        "result": "player1_win",
-        "date": "2024-07-20T10:00:00Z",
-        "score_player1": 1,
-        "score_player2": 0
-      },
-      {
-        "match_id": 4002,
-        "tournament_id": 104,
-        "round": 1,
-        "player1_id": 4,
-        "player2_id": 5,
-        "result": "player2_win",
-        "date": "2024-07-20T10:00:00Z",
-        "score_player1": 0,
-        "score_player2": 1
-      },
-      {
-        "match_id": 4003,
-        "tournament_id": 104,
-        "round": 1,
-        "player1_id": 6,
-        "player2_id": 7,
-        "result": "draw",
-        "date": "2024-07-20T10:00:00Z",
-        "score_player1": 0.5,
-        "score_player2": 0.5
-      },
-      {
-        "match_id": 4004,
-        "tournament_id": 104,
-        "round": 2,
-        "player1_id": 1,
-        "player2_id": 5,
-        "result": "player1_win",
-        "date": "2024-07-24T10:00:00Z",
-        "score_player1": 1,
-        "score_player2": 0
-      },
-      {
-        "match_id": 4005,
-        "tournament_id": 104,
-        "round": 2,
-        "player1_id": 6,
-        "player2_id": 4,
-        "result": "player1_win",
-        "date": "2024-07-24T10:00:00Z",
-        "score_player1": 1,
-        "score_player2": 0
-      },
-      {
-        "match_id": 4006,
-        "tournament_id": 104,
-        "round": 2,
-        "player1_id": 2,
-        "player2_id": 7,
-        "result": "player2_win",
-        "date": "2024-07-24T10:00:00Z",
-        "score_player1": 0,
-        "score_player2": 1
-      },
-      {
-        "match_id": 4007,
-        "tournament_id": 104,
-        "round": 3,
-        "player1_id": 1,
-        "player2_id": 6,
-        "result": "player1_win",
-        "date": "2024-07-28T10:00:00Z",
-        "score_player1": 1,
-        "score_player2": 0
-      },
-      {
-        "match_id": 4008,
-        "tournament_id": 104,
-        "round": 3,
-        "player1_id": 2,
-        "player2_id": 5,
-        "result": "draw",
-        "date": "2024-07-28T10:00:00Z",
-        "score_player1": 0.5,
-        "score_player2": 0.5
-      },
-      {
-        "match_id": 4009,
-        "tournament_id": 104,
-        "round": 3,
-        "player1_id": 7,
-        "player2_id": 4,
-        "result": "player1_win",
-        "date": "2024-07-28T10:00:00Z",
-        "score_player1": 1,
-        "score_player2": 0
-      }
-    ]
-  }
-  
+  "matches": [
+    {
+      "match_id": 1001,
+      "date": "2024-07-01T10:00:00Z",
+      "tournament_id": 101,
+      "round": 1,
+      "player1_id": 1,
+      "player2_id": 4,
+      "score_player1": 1,
+      "score_player2": 0
+    },
+    {
+      "match_id": 1002,
+      "date": "2024-07-01T10:00:00Z",
+      "tournament_id": 101,
+      "round": 1,
+      "player1_id": 2,
+      "player2_id": 5,
+      "score_player1": 0.5,
+      "score_player2": 0.5
+    },
+    {
+      "match_id": 1003,
+      "date": "2024-07-01T10:00:00Z",
+      "tournament_id": 101,
+      "round": 1,
+      "player1_id": 3,
+      "player2_id": 6,
+      "score_player1": 0,
+      "score_player2": 1
+    },
+    {
+      "match_id": 1004,
+      "date": "2024-07-03T10:00:00Z",
+      "tournament_id": 101,
+      "round": 2,
+      "player1_id": 1,
+      "player2_id": 6,
+      "score_player1": 0.5,
+      "score_player2": 0.5
+    },
+    {
+      "match_id": 1005,
+      "date": "2024-07-03T10:00:00Z",
+      "tournament_id": 101,
+      "round": 2,
+      "player1_id": 2,
+      "player2_id": 5,
+      "score_player1": 0,
+      "score_player2": 1
+    },
+    {
+      "match_id": 1006,
+      "date": "2024-07-03T10:00:00Z",
+      "tournament_id": 101,
+      "round": 2,
+      "player1_id": 3,
+      "player2_id": 4,
+      "score_player1": 1,
+      "score_player2": 0
+    },
+    {
+      "match_id": 1007,
+      "date": "2024-07-05T10:00:00Z",
+      "tournament_id": 101,
+      "round": 3,
+      "player1_id": 1,
+      "player2_id": 5,
+      "score_player1": null,
+      "score_player2": null
+    },
+    {
+      "match_id": 1008,
+      "date": "2024-07-05T10:00:00Z",
+      "tournament_id": 101,
+      "round": 3,
+      "player1_id": 6,
+      "player2_id": 3,
+      "score_player1": null,
+      "score_player2": null
+    },
+    {
+      "match_id": 1009,
+      "date": "2024-07-05T10:00:00Z",
+      "tournament_id": 101,
+      "round": 3,
+      "player1_id": 2,
+      "player2_id": 4,
+      "score_player1": null,
+      "score_player2": null
+    },
+    {
+      "match_id": 2001,
+      "date": "2024-08-05T09:00:00Z",
+      "tournament_id": 102,
+      "round": 1,
+      "player1_id": 2,
+      "player2_id": 6,
+      "score_player1": null,
+      "score_player2": null
+    },
+    {
+      "match_id": 2002,
+      "date": "2024-08-07T09:00:00Z",
+      "tournament_id": 102,
+      "round": 2,
+      "player1_id": 6,
+      "player2_id": 7,
+      "score_player1": null,
+      "score_player2": null
+    },
+    {
+      "match_id": 2003,
+      "date": "2024-08-09T09:00:00Z",
+      "tournament_id": 102,
+      "round": 3,
+      "player1_id": 2,
+      "player2_id": 7,
+      "score_player1": null,
+      "score_player2": null
+    },
+    {
+      "match_id": 3001,
+      "date": "2024-10-01T10:00:00Z",
+      "tournament_id": 103,
+      "round": 1,
+      "player1_id": 1,
+      "player2_id": 5,
+      "score_player1": 0,
+      "score_player2": 1
+    },
+    {
+      "match_id": 3002,
+      "date": "2024-10-01T10:00:00Z",
+      "tournament_id": 103,
+      "round": 1,
+      "player1_id": 3,
+      "player2_id": 6,
+      "score_player1": 0.5,
+      "score_player2": 0.5
+    },
+    {
+      "match_id": 3003,
+      "date": "2024-10-01T10:00:00Z",
+      "tournament_id": 103,
+      "round": 1,
+      "player1_id": 7,
+      "player2_id": null,
+      "score_player1": 1,
+      "score_player2": 0
+    },
+    {
+      "match_id": 3004,
+      "date": "2024-10-03T10:00:00Z",
+      "tournament_id": 103,
+      "round": 2,
+      "player1_id": 5,
+      "player2_id": 7,
+      "score_player1": 1,
+      "score_player2": 0
+    },
+    {
+      "match_id": 3005,
+      "date": "2024-10-03T10:00:00Z",
+      "tournament_id": 103,
+      "round": 2,
+      "player1_id": 3,
+      "player2_id": 6,
+      "score_player1": 1,
+      "score_player2": 0
+    },
+    {
+      "match_id": 3006,
+      "date": "2024-10-03T10:00:00Z",
+      "tournament_id": 103,
+      "round": 2,
+      "player1_id": 1,
+      "player2_id": null,
+      "score_player1": 1,
+      "score_player2": 0
+    },
+    {
+      "match_id": 3007,
+      "date": "2024-10-05T10:00:00Z",
+      "tournament_id": 103,
+      "round": 3,
+      "player1_id": 5,
+      "player2_id": 3,
+      "score_player1": 0,
+      "score_player2": 1
+    },
+    {
+      "match_id": 3008,
+      "date": "2024-10-05T10:00:00Z",
+      "tournament_id": 103,
+      "round": 3,
+      "player1_id": 1,
+      "player2_id": 7,
+      "score_player1": 0,
+      "score_player2": 1
+    },
+    {
+      "match_id": 3009,
+      "date": "2024-10-05T10:00:00Z",
+      "tournament_id": 103,
+      "round": 3,
+      "player1_id": 6,
+      "player2_id": null,
+      "score_player1": 1,
+      "score_player2": 0
+    },
+    {
+      "match_id": 4001,
+      "date": "2024-07-20T10:00:00Z",
+      "tournament_id": 104,
+      "round": 1,
+      "player1_id": 1,
+      "player2_id": 2,
+      "score_player1": 1,
+      "score_player2": 0
+    },
+    {
+      "match_id": 4002,
+      "date": "2024-07-20T10:00:00Z",
+      "tournament_id": 104,
+      "round": 1,
+      "player1_id": 4,
+      "player2_id": 5,
+      "score_player1": 0,
+      "score_player2": 1
+    },
+    {
+      "match_id": 4003,
+      "date": "2024-07-20T10:00:00Z",
+      "tournament_id": 104,
+      "round": 1,
+      "player1_id": 6,
+      "player2_id": 7,
+      "score_player1": 0.5,
+      "score_player2": 0.5
+    },
+    {
+      "match_id": 4004,
+      "date": "2024-07-24T10:00:00Z",
+      "tournament_id": 104,
+      "round": 2,
+      "player1_id": 1,
+      "player2_id": 5,
+      "score_player1": 1,
+      "score_player2": 0
+    },
+    {
+      "match_id": 4005,
+      "date": "2024-07-24T10:00:00Z",
+      "tournament_id": 104,
+      "round": 2,
+      "player1_id": 6,
+      "player2_id": 4,
+      "score_player1": 1,
+      "score_player2": 0
+    },
+    {
+      "match_id": 4006,
+      "date": "2024-07-24T10:00:00Z",
+      "tournament_id": 104,
+      "round": 2,
+      "player1_id": 2,
+      "player2_id": 7,
+      "score_player1": 0,
+      "score_player2": 1
+    },
+    {
+      "match_id": 4007,
+      "date": "2024-07-28T10:00:00Z",
+      "tournament_id": 104,
+      "round": 3,
+      "player1_id": 1,
+      "player2_id": 6,
+      "score_player1": 1,
+      "score_player2": 0
+    },
+    {
+      "match_id": 4008,
+      "date": "2024-07-28T10:00:00Z",
+      "tournament_id": 104,
+      "round": 3,
+      "player1_id": 2,
+      "player2_id": 5,
+      "score_player1": 0.5,
+      "score_player2": 0.5
+    },
+    {
+      "match_id": 4009,
+      "date": "2024-07-28T10:00:00Z",
+      "tournament_id": 104,
+      "round": 3,
+      "player1_id": 7,
+      "player2_id": 4,
+      "score_player1": 1,
+      "score_player2": 0
+    }
+  ]
+}
