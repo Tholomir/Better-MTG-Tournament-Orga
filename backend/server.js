@@ -123,4 +123,7 @@ app.use(cors({
     if (['http://localhost:5500', 'http://127.0.0.1:5500'].includes(origin) || !origin) {
       callback(null, true);
     } else {
-      ca
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
