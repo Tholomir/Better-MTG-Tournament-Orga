@@ -95,6 +95,47 @@ app.post('/api/players', (req, res) => {
   });
 });
 
+// Endpoint to delete a player
+app.delete('/api/players/:id', (req, res) => {
+  const playerId = parseInt(req.params.id);
+
+  fs.readFile(playersFilePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading Players.JSON:', err);
+      return res.status(500).json({ message: 'Internal Server Error' });
+    }
+
+    try {
+      const playersData = JSON.parse(data);
+      let players = playersData.players;
+
+      // Find the index of the player to be deleted
+      const playerIndex = players.findIndex(player => player.player_id === playerId);
+
+      if (playerIndex === -1) {
+        return res.status(404).json({ message: 'Player not found' });
+      }
+
+      // Remove the player from the array
+      players.splice(playerIndex, 1);
+
+      // Write the updated data back to Players.JSON
+      fs.writeFile(playersFilePath, JSON.stringify(playersData, null, 2), 'utf8', (writeErr) => {
+        if (writeErr) {
+          console.error('Error writing to Players.JSON:', writeErr);
+          return res.status(500).json({ message: 'Internal Server Error' });
+        }
+
+        res.json({ message: 'Player deleted successfully' });
+      });
+    } catch (parseError) {
+      console.error('Error parsing Players.JSON:', parseError);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  });
+});
+
+
 // Endpoint to get all tournaments
 app.get('/api/tournaments', (req, res) => {
   fs.readFile(tournamentsFilePath, 'utf8', (err, data) => {
@@ -127,3 +168,4 @@ app.use(cors({
     }
   }
 }));
+

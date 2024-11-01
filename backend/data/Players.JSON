@@ -1,109 +1,146 @@
 {
-    "players": [
-      {
-        "player_id": 1,
-        "username": "DragonSlayer",
-        "full_name": "Alice Johnson",
-        "registration_date": "2024-01-15T08:30:00Z",
-        "statistics": {
-          "total_matches": 15,
-          "wins": 9,
-          "draws": 3,
-          "losses": 3,
-          "game_win_percentage": 75.0
-        },
-        "achievements": ["First Win", "Sharp Shooter", "Consistent Performer"],
-        "icon": "emoji_events"
+  "players": [
+    {
+      "player_id": 1,
+      "username": "DragonSlayer",
+      "full_name": "Alice Johnson",
+      "registration_date": "2024-01-15T08:30:00Z",
+      "statistics": {
+        "total_matches": 15,
+        "wins": 9,
+        "draws": 3,
+        "losses": 3,
+        "game_win_percentage": 75
       },
-      {
-        "player_id": 2,
-        "username": "ShadowNinja",
-        "full_name": "Bob Smith",
-        "registration_date": "2024-02-20T10:45:00Z",
-        "statistics": {
-          "total_matches": 12,
-          "wins": 7,
-          "draws": 2,
-          "losses": 3,
-          "game_win_percentage": 68.5
-        },
-        "achievements": ["Stealth Master", "Quick Learner"],
-        "icon": "face"
+      "achievements": [
+        "First Win",
+        "Sharp Shooter",
+        "Consistent Performer"
+      ],
+      "icon": "emoji_events"
+    },
+    {
+      "player_id": 2,
+      "username": "ShadowNinja",
+      "full_name": "Bob Smith",
+      "registration_date": "2024-02-20T10:45:00Z",
+      "statistics": {
+        "total_matches": 12,
+        "wins": 7,
+        "draws": 2,
+        "losses": 3,
+        "game_win_percentage": 68.5
       },
-      {
-        "player_id": 3,
-        "username": "MysticMage",
-        "full_name": "Carol Lee",
-        "registration_date": "2024-03-05T14:20:00Z",
-        "statistics": {
-          "total_matches": 10,
-          "wins": 5,
-          "draws": 3,
-          "losses": 2,
-          "game_win_percentage": 70.0
-        },
-        "achievements": ["Magic Novice", "Tactical Thinker"],
-        "icon": "star"
+      "achievements": [
+        "Stealth Master",
+        "Quick Learner"
+      ],
+      "icon": "face"
+    },
+    {
+      "player_id": 3,
+      "username": "MysticMage",
+      "full_name": "Carol Lee",
+      "registration_date": "2024-03-05T14:20:00Z",
+      "statistics": {
+        "total_matches": 10,
+        "wins": 5,
+        "draws": 3,
+        "losses": 2,
+        "game_win_percentage": 70
       },
-      {
-        "player_id": 4,
-        "username": "StealthAssassin",
-        "full_name": "David Kim",
-        "registration_date": "2024-04-12T09:15:00Z",
-        "statistics": {
-          "total_matches": 8,
-          "wins": 4,
-          "draws": 1,
-          "losses": 3,
-          "game_win_percentage": 65.0
-        },
-        "achievements": ["Silent Killer", "Precision Strike"],
-        "icon": "mood"
+      "achievements": [
+        "Magic Novice",
+        "Tactical Thinker"
+      ],
+      "icon": "star"
+    },
+    {
+      "player_id": 4,
+      "username": "StealthAssassin",
+      "full_name": "David Kim",
+      "registration_date": "2024-04-12T09:15:00Z",
+      "statistics": {
+        "total_matches": 8,
+        "wins": 4,
+        "draws": 1,
+        "losses": 3,
+        "game_win_percentage": 65
       },
-      {
-        "player_id": 5,
-        "username": "ThunderBolt",
-        "full_name": "Evelyn Martinez",
-        "registration_date": "2024-05-18T11:50:00Z",
-        "statistics": {
-          "total_matches": 20,
-          "wins": 14,
-          "draws": 4,
-          "losses": 2,
-          "game_win_percentage": 80.0
-        },
-        "achievements": ["Lightning Fast", "Dominant Player"],
-        "icon": "flash_on"
+      "achievements": [
+        "Silent Killer",
+        "Precision Strike"
+      ],
+      "icon": "mood"
+    },
+    {
+      "player_id": 5,
+      "username": "ThunderBolt",
+      "full_name": "Evelyn Martinez",
+      "registration_date": "2024-05-18T11:50:00Z",
+      "statistics": {
+        "total_matches": 20,
+        "wins": 14,
+        "draws": 4,
+        "losses": 2,
+        "game_win_percentage": 80
       },
-      {
-        "player_id": 6,
-        "username": "IronGuardian",
-        "full_name": "Franklin O'Connor",
-        "registration_date": "2024-06-25T16:05:00Z",
-        "statistics": {
-          "total_matches": 18,
-          "wins": 10,
-          "draws": 5,
-          "losses": 3,
-          "game_win_percentage": 72.5
-        },
-        "achievements": ["Unbreakable", "Defensive Mastery"],
-        "icon": "shield"
+      "achievements": [
+        "Lightning Fast",
+        "Dominant Player"
+      ],
+      "icon": "flash_on"
+    },
+    {
+      "player_id": 6,
+      "username": "IronGuardian",
+      "full_name": "Franklin O'Connor",
+      "registration_date": "2024-06-25T16:05:00Z",
+      "statistics": {
+        "total_matches": 18,
+        "wins": 10,
+        "draws": 5,
+        "losses": 3,
+        "game_win_percentage": 72.5
       },
-      {
-        "player_id": 7,
-        "username": "BlazeRunner",
-        "full_name": "Grace Hopper",
-        "registration_date": "2024-07-01T13:25:00Z",
-        "statistics": {
-          "total_matches": 5,
-          "wins": 2,
-          "draws": 1,
-          "losses": 2,
-          "game_win_percentage": 60.0
-        },
-        "achievements": ["Rising Star", "Speedster"],
-        "icon": "rocket"
-      }
-    ]
-  }
+      "achievements": [
+        "Unbreakable",
+        "Defensive Mastery"
+      ],
+      "icon": "shield"
+    },
+    {
+      "player_id": 7,
+      "username": "BlazeRunner",
+      "full_name": "Grace Hopper",
+      "registration_date": "2024-07-01T13:25:00Z",
+      "statistics": {
+        "total_matches": 5,
+        "wins": 2,
+        "draws": 1,
+        "losses": 2,
+        "game_win_percentage": 60
+      },
+      "achievements": [
+        "Rising Star",
+        "Speedster"
+      ],
+      "icon": "rocket"
+    },
+    {
+      "username": "RippleCrusher",
+      "full_name": "Herbert Oppenheimer",
+      "icon": "taunt",
+      "player_id": 8,
+      "registration_date": "2024-11-01T19:05:31.783Z",
+      "statistics": {
+        "total_matches": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "game_win_percentage": 0
+      },
+      "achievements": []
+    }
+  ]
+}
