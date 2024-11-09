@@ -1,80 +1,275 @@
-# Tournament Management System for 6-Player Draft Events
+# Tournament Organizer
 
-## ________________________________________
+This project is a web application for managing tournaments, players, and matches. It utilizes a simple backend built with Node.js and Express.js to handle data persistence and API requests.
 
-## Project Overview
+## Getting Started
 
-The Tournament Management System is a web-based application designed to facilitate and streamline the organization of competitive draft tournaments for six participants. Whether you're hosting a local gaming event, a community competition, or an online tournament, this system ensures a fair, efficient, and enjoyable experience for both organizers and players.
+1. **Clone the repository:**
 
-## ________________________________________
+   ```bash
+   git clone https://github.com/your-username/tournament-organizer.git
+   ```
 
-## Key Features
+2. **Navigate to the backend directory:**
+
+   ```bash
+   cd tournament-organizer/backend
+   ```
+
+3. **Install dependencies:** Ensure Node.js is installed on your system.
+
+   ```bash
+   npm install
+   ```
+
+4. **Start the server:**
+
+   ```bash
+   node server.js
+   ```
+
+   The server runs on `http://localhost:3000` by default.
+
+5. **Open the application:** Open `index.html` in your browser or use a local server (e.g., Live Server in VSCode).
+
+## Usage Guide
+
+### Player Management
+
+* **Add a Player:** Click the "Add Player" button, enter the required details, and submit.
+* **Remove a Player:** Open the "Remove Player" dialog and select the player to delete.
+
+### Tournament Management
+
+* **Create a Tournament:** Use the "Create New Tournament" button to start a tournament.
+* **Select Players:** Choose players for the tournament using the "Select Tournament Players" dialog.
+* **View Tournament:** Select a tournament from the dropdown to see its details and players.
+
+### Match Management
+
+* **View Matches:** Display matches loaded from the server.
+* **Add Matches:** Add new match data using the provided interface.
+* **Filter Matches:** Filter match results by tournament ID.
+
+## File Structure
+backend/
+│
+├── data/
+│   ├── Matches.JSON
+│   ├── Players.JSON
+│   └── Tournaments.JSON
+│
+├── node_modules/
+│
+├── package-lock.json
+├── package.json
+├── server.js
+│
+├── css/
+│   ├── dark.css
+│   ├── light.css
+│   └── styles.css
+│
+├── js/
+│   ├── main.js
+│   ├── MatchManager.js
+│   ├── PlayerManager.js
+│   ├── TournamentManager.js
+│   └── UIManager.js
+│
+├── material/
+│
+├── .gitignore
+├── index.html
+├── README.md
+├── requirements01.txt
+└── TournamentOrgaApp_icon.png
+
+
+## Backend Data Structure
+
+1. **Players Data (Players.JSON)**
+
+   File path: `/backend/data/Players.JSON`
+
+   Structure:
+
+   ```json
+   {
+     "players": [
+       {
+         "player_id": 1,
+         "username": "DragonSlayer",
+         "full_name": "Alice Johnson",
+         "registration_date": "2024-01-15T08:30:00Z",
+         "statistics": {
+           "total_matches": 15,
+           "wins": 9,
+           "draws": 3,
+           "losses": 3,
+           "game_win_percentage": 75
+         },
+         "achievements": ["First Win", "Sharp Shooter", "Consistent Performer"],
+         "icon": "emoji_events"
+       },
+       ...
+     ]
+   }
+   ```
+
+2. **Tournaments Data (Tournaments.JSON)**
+
+   File path: `/backend/data/Tournaments.JSON`
+
+   Structure:
+
+   ```json
+   {
+     "tournaments": [
+       {
+         "tournament_id": 101,
+         "name": "Bloomburrow Championship 2024",
+         "created_at": "2024-06-25T12:00:00Z",
+         "start_date": "2024-07-01T10:00:00Z",
+         "end_date": "2024-07-10T18:00:00Z",
+         "rounds": 3,
+         "status": "Ongoing",
+         "current_round": 2,
+         "players": [1, 3, 4, 6]
+       },
+       ...
+     ]
+   }
+   ```
+
+3. **Matches Data (Matches.JSON)**
+
+   File path: `/backend/data/Matches.JSON`
+
+   Structure:
+
+   ```json
+   {
+     "matches": [
+       {
+         "match_id": 1001,
+         "date": "2024-07-01T10:00:00Z",
+         "tournament_id": 101,
+         "round": 1,
+         "player1_id": 1,
+         "player2_id": 4,
+         "score_player1": 1,
+         "score_player2": 0
+       },
+       ...
+     ]
+   }
+   ```
+
+## Server API Logic
+
+### Overview
+
+The backend server is built with Node.js and Express.js. It handles data operations such as fetching and modifying player and tournament information.
+
+### Endpoints
 
 1. **Player Management**
-    * **Registration:** Easily add and manage up to six players for each tournament.
-    * **Profiles:** Maintain detailed player profiles, including names and performance statistics.
-2. **Tournament Structure**
-    * **Three Rounds of Play:** Organize the tournament into three competitive rounds, where each player faces three different opponents.
-    * **Match Pairings:** Intelligent pairing algorithms match players with similar performance records while avoiding rematches.
-    * **Finals (Optional):** An optional final match between the top two players, when the rankings are identical at the end, determines the tournament champion, ensuring a decisive and exciting conclusion.
-3. **Scoring and Ranking**
-    * **Match Points:** Assign points based on match outcomes (win, draw, loss) to accurately reflect player performance.
-    * **Comprehensive Tiebreakers:** Implement advanced tiebreaker rules, including Opponents' Match-Win Percentage (OMW%), Game-Win Percentage (GW%), and Opponents' Game-Win Percentage (OGW%), ensuring precise and fair player rankings.
-    * **Opponents' Match-Win Percentage (OMW%):** This measures the strength of the opponents a player has faced. It is the average win percentage of all the player’s opponents. The idea is that if you played against stronger opponents (who won more of their matches), your OMW% will be higher, reflecting the difficulty of your matchups. This is calculated by dividing the number of matches won by the opponents by the total number of matches they played.
-    * **Game-Win Percentage (GW%):** GW% focuses on individual games rather than matches. It is the percentage of games that the player has won out of the total number of games they've played. This shows how dominant a player has been in their games, even if they lost some matches.
-    * **Opponents' Game-Win Percentage (OGW%):** Similar to OMW%, OGW% calculates the average game-win percentage of all the player’s opponents. This further refines ranking by considering how well a player's opponents performed at the game level. It helps differentiate between players who faced strong opponents with consistent game performance versus weaker opponents.
-4. **Real-Time Standings**
-    * **Dynamic Leaderboard:** Display current standings with all relevant statistics, updated in real-time as matches conclude.
-    * **Champion Announcement:** Clearly identify and announce the tournament champion upon completion of all rounds and finals.
-5. **Reset Functionality**
-    * **Tournament Reset:** Easily reset the tournament to clear all existing data, allowing organizers to start fresh for new events without residual information from previous tournaments.
-6. **Advanced Features**
-    * **Scheduling Tools:** Advanced scheduling options to manage match times, ensuring efficient use of time and resources.
-    * **Reporting and Analytics:** Generate detailed reports and visualizations on player performance, match outcomes, and overall tournament statistics.
-    * **Mobile-Friendly Design:** Ensure the application is fully responsive, providing an optimal experience on both desktop and mobile devices.
-    * **Gamification Elements:** Introduce achievements, badges, and leaderboards to enhance player engagement and motivation.
-    * **Secure Data Handling:** Implement robust security measures to protect player data and ensure the integrity of tournament information.
 
-## ________________________________________
+   * `GET /api/players`: Retrieve all players.
+   * `POST /api/players`: Add a new player.
+     Request body:
 
-Current Functionality:
-Frontend:
-Tournament Selection: Users can select from a list of tournaments displayed in a dropdown menu.
-Player List: The player list for the selected tournament is dynamically generated and displayed.
-Player Information: Each player in the list displays their username, icon, and basic statistics (wins, losses, draws).
-Add Player Dialog: A dialog box allows users to add new players with username, full name, and icon selection.
-Material Design Components: The frontend utilizes Material Design components for a consistent and visually appealing user interface.
-Backend:
-API Endpoints:
-/api/players: Retrieves all player data from Players.JSON.
-/api/players: Adds a new player to Players.JSON.
-/api/tournaments: Retrieves all tournament data from Tournaments.JSON.
-Data Storage: Tournament and player data are stored in JSON files (Tournaments.JSON and Players.JSON).
-Data Validation: Basic validation is implemented for new player data to ensure required fields are present.
+     ```json
+     {
+       "username": "FlamingWinner",
+       "full_name": "Nurit Andersch",
+       "icon": "owl"
+     }
+     ```
+   * `DELETE /api/players/:id`: Delete a player by their id.
 
-## ________________________________________
+2. **Tournament Management**
 
-## Benefits
+   * `GET /api/tournaments`: Retrieve all tournaments.
+   * `PUT /api/tournaments/:tournamentId/players`: Update players in a specific tournament.
+     Request body:
 
-* **Fair Competition:** Ensures that all players compete under the same rules and conditions, promoting a level playing field.
-* **Efficiency:** Automates the tedious aspects of tournament management, such as pairings and scoring, saving valuable time for organizers.
-* **Transparency:** Clear and detailed standings with comprehensive statistics allow players to track their performance accurately.
-* **Flexibility:** Optional finals, multiple tournament support, and customizable rules provide organizers with the tools to tailor the tournament structure as needed.
-* **Engagement:** Features like chat, notifications, and gamification elements enhance player interaction and enjoyment.
-* **Scalability:** While designed for six players, the system can be adapted to accommodate different numbers of participants and multiple tournaments for future expansions.
-* **Accessibility:** Mobile-friendly and multi-language support ensure that the application is usable by a wide range of participants.
+     ```json
+     {
+       "players": [1, 2, 3, 4]
+     }
+     ```
 
-## ________________________________________
+### Helper Functions
 
-## Project Structure
-Better MTG Tournament Organizer
-├── backend
-│   ├── server.js
-│   ├── tournamentLogic.js
-│   └── data
-│       ├── Tournaments.JSON
-│       └── Players.JSON
-└── js
-    └── uiLogic.js
+* `readJSONFile(filePath)`: Reads and returns data from a JSON file.
+* `writeJSONFile(filePath, data)`: Writes updated data to a JSON file.
 
-## ________________________________________
+## Running the Server
+
+1. Navigate to the backend directory:
+
+   ```bash
+   cd backend
+   ```
+
+2. Start the server:
+
+   ```bash
+   node server.js
+   ```
+
+   The server runs on `http://localhost:3000` by default.
+
+## Example API Responses
+
+* `GET /api/players` Response:
+
+   ```json
+   {
+     "players": [
+       {
+         "player_id": 1,
+         "username": "DragonSlayer",
+         "full_name": "Alice Johnson",
+         "statistics": { "total_matches": 15, "wins": 9, "draws": 3, "losses": 3 },
+         "achievements": ["First Win", "Sharp Shooter"],
+         "icon": "emoji_events"
+       },
+       ...
+     ]
+   }
+   ```
+
+* `POST /api/players` Response:
+
+   ```json
+   {
+     "message": "Player added successfully",
+     "player": {
+       "player_id": 9,
+       "username": "FlamingWinner",
+       "full_name": "Nurit Andersch",
+       "registration_date": "2024-11-01T19:59:12.248Z",
+       "statistics": { "total_matches": 0, "wins": 0, "draws": 0, "losses": 0 },
+       "achievements": [],
+       "icon": "owl"
+     }
+   }
+   ```
+
+* `DELETE /api/players/:id` Response:
+
+   ```json
+   {
+     "message": "Player deleted successfully"
+   }
+   ```
+
+## Technologies Used
+
+* **Frontend:** HTML, CSS (Bootstrap, custom styles), JavaScript
+* **Backend:** Node.js, Express.js
+* **Storage:** JSON files for data persistence
+* **Libraries:** Material Design Components, Bootstrap, CORS, Body-Parser
