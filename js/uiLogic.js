@@ -1,54 +1,221 @@
+// uiLogic.js
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Display tournament name in the headline
-  let currentTournamentName = "Select a Tournament";
-  const tournamentNameElement = document.getElementById('tournamentName');
-  tournamentNameElement.textContent = currentTournamentName;
+  const playerManager = new PlayerManager();
+  const tournamentManager = new TournamentManager();
+  const uiManager = new UIManager(playerManager, tournamentManager);
 
-  const tournamentSelectField = document.getElementById('tournamentSelectField');
-  const playerListElement = document.getElementById('playerList');
+  uiManager.initialize();
+});
 
-  // Variables to hold the tournaments and players arrays
-  let tournaments = [];
-  let players = [];
-  let currentSelectedTournament = null; // Track the currently selected tournament
+// PlayerManager class handles player-related data and operations
+class PlayerManager {
+  constructor() {
+    this.players = [];
+  }
 
-  // Select elements for adding a player
-  const addPlayerButton = document.getElementById('addPlayerButton');
-  const addPlayerDialog = document.getElementById('addPlayerDialog');
-  const usernameField = document.getElementById('usernameField');
-  const fullNameField = document.getElementById('fullNameField');
-  const iconSelectField = document.getElementById('iconSelectField');
-  const confirmAddPlayerButton = document.getElementById('confirmAddPlayerButton');
+  // Load players from the backend
+  async loadPlayers() {
+    try {
+      const response = await fetch('http://localhost:3000/api/players');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const playersData = await response.json();
+      this.players = playersData.players;
+      return this.players;
+    } catch (error) {
+      console.error('Failed to load players:', error);
+      return [];
+    }
+  }
 
-  // Select elements for removing a player
-  const removePlayerButton = document.getElementById('removePlayerButton');
-  const removePlayerDialog = document.getElementById('removePlayerDialog');
-  const removePlayerList = document.getElementById('removePlayerList');
+  // Add a new player
+  async addPlayer(newPlayer) {
+    try {
+      const response = await fetch('http://localhost:3000/api/players', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newPlayer)
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to add player');
+      }
+      const responseData = await response.json();
+      this.players.push(responseData.player);
+      return responseData.player;
+    } catch (error) {
+      console.error('Error adding player:', error);
+      throw error;
+    }
+  }
 
-  // Event listener to open the dialog
-  addPlayerButton.addEventListener('click', () => {
-    addPlayerDialog.show();
-  });
+  // Delete a player
+  async deletePlayer(playerId) {
+    try {
+      const response = await fetch(`http://localhost:3000/api/players/${playerId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete player');
+      }
+      this.players = this.players.filter(player => player.player_id !== playerId);
+    } catch (error) {
+      console.error('Error deleting player:', error);
+      throw error;
+    }
+  }
 
-  // Event listener to open the remove player dialog
-  removePlayerButton.addEventListener('click', () => {
-    populateRemovePlayerList();
-    removePlayerDialog.show();
-  });
+  // Get all players
+  getPlayers() {
+    return this.players;
+  }
 
-  // Handle dialog confirmation
-  confirmAddPlayerButton.addEventListener('click', async () => {
+  // Get a player by ID
+  getPlayerById(playerId) {
+    return this.players.find(player => player.player_id === playerId);
+  }
+}
+
+// TournamentManager class handles tournament-related data and operations
+class TournamentManager {
+  constructor() {
+    this.tournaments = [];
+    this.currentSelectedTournament = null;
+  }
+
+  // Load tournaments from the backend
+  async loadTournaments() {
+    try {
+      const response = await fetch('http://localhost:3000/api/tournaments');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const tournamentsData = await response.json();
+      this.tournaments = tournamentsData.tournaments;
+      return this.tournaments;
+    } catch (error) {
+      console.error('Failed to load tournaments:', error);
+      return [];
+    }
+  }
+
+  // Get all tournaments
+  getTournaments() {
+    return this.tournaments;
+  }
+
+  // Select a tournament by ID
+  selectTournament(tournamentId) {
+    this.currentSelectedTournament = this.tournaments.find(t => t.tournament_id == tournamentId) || null;
+    return this.currentSelectedTournament;
+  }
+
+  // Get the currently selected tournament
+  getCurrentTournament() {
+    return this.currentSelectedTournament;
+  }
+}
+
+// UIManager class handles UI interactions and updates
+class UIManager {
+  constructor(playerManager, tournamentManager) {
+    this.playerManager = playerManager;
+    this.tournamentManager = tournamentManager;
+
+    // Initialize UI elements
+    this.initUIElements();
+
+    // Bind event listeners
+    this.bindEventListeners();
+  }
+
+  // Initialize UI elements by selecting DOM elements
+  initUIElements() {
+    // Tournament name element
+    this.tournamentNameElement = document.getElementById('tournamentName');
+    this.tournamentSelectField = document.getElementById('tournamentSelectField');
+    this.playerListElement = document.getElementById('playerList');
+
+    // Add player dialog elements
+    this.addPlayerButton = document.getElementById('addPlayerButton');
+    this.addPlayerDialog = document.getElementById('addPlayerDialog');
+    this.usernameField = document.getElementById('usernameField');
+    this.fullNameField = document.getElementById('fullNameField');
+    this.iconSelectField = document.getElementById('iconSelectField');
+    this.confirmAddPlayerButton = document.getElementById('confirmAddPlayerButton');
+    this.cancelAddPlayerButton = document.getElementById('cancelAddPlayerButton');
+
+    // Remove player dialog elements
+    this.removePlayerButton = document.getElementById('removePlayerButton');
+    this.removePlayerDialog = document.getElementById('removePlayerDialog');
+    this.removePlayerList = document.getElementById('removePlayerList');
+    this.cancelRemovePlayerButton = document.getElementById('cancelRemovePlayerButton');
+  }
+
+  // Bind event listeners to UI elements
+  bindEventListeners() {
+    // Add Player Dialog
+    this.addPlayerButton.addEventListener('click', () => this.openAddPlayerDialog());
+    this.confirmAddPlayerButton.addEventListener('click', () => this.handleAddPlayer());
+    this.cancelAddPlayerButton.addEventListener('click', () => this.closeAddPlayerDialog());
+
+    // Remove Player Dialog
+    this.removePlayerButton.addEventListener('click', () => this.openRemovePlayerDialog());
+    this.cancelRemovePlayerButton.addEventListener('click', () => this.closeRemovePlayerDialog());
+
+    // Tournament Selection
+    this.tournamentSelectField.addEventListener('change', (event) => {
+      const selectedTournamentId = event.target.value;
+      this.handleTournamentSelection(selectedTournamentId);
+    });
+  }
+
+  // Initialize the UI by loading data and populating elements
+  async initialize() {
+    // Load data
+    await Promise.all([
+      this.tournamentManager.loadTournaments(),
+      this.playerManager.loadPlayers()
+    ]);
+
+    // Initialize UI
+    this.populateTournamentSelect();
+    this.updatePlayerList();
+  }
+
+  // Open the Add Player Dialog
+  openAddPlayerDialog() {
+    this.addPlayerDialog.show();
+  }
+
+  // Close the Add Player Dialog
+  closeAddPlayerDialog() {
+    this.clearAddPlayerForm();
+    this.addPlayerDialog.close();
+  }
+
+  // Clear the Add Player form fields
+  clearAddPlayerForm() {
+    this.usernameField.value = '';
+    this.fullNameField.value = '';
+    this.iconSelectField.value = '';
+  }
+
+  // Handle adding a new player
+  async handleAddPlayer() {
     // Validate form inputs
-    const username = usernameField.value.trim();
-    const fullName = fullNameField.value.trim();
-    const icon = iconSelectField.value;
+    const username = this.usernameField.value.trim();
+    const fullName = this.fullNameField.value.trim();
+    const icon = this.iconSelectField.value;
 
     if (!username || !fullName || !icon) {
       alert('Please fill in all required fields.');
       return;
     }
 
-    // Prepare new player data (excluding player_id and registration_date)
     const newPlayer = {
       username: username,
       full_name: fullName,
@@ -56,233 +223,144 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     try {
-      // Send POST request to add the new player
-      const response = await fetch('http://localhost:3000/api/players', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newPlayer)
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to add player');
-      }
-
-      const responseData = await response.json();
-      console.log('Player added:', responseData.player);
-
-      // Update the players array with the new player
-      players.push(responseData.player);
-
-      // Update the player list UI
-      if (currentSelectedTournament) {
-        const playerIds = currentSelectedTournament.players;
-        const tournamentPlayers = players.filter(player => playerIds.includes(player.player_id));
-        populatePlayerList(tournamentPlayers);
-      } else {
-        populatePlayerList(players);
-      }
-
-      // Clear form fields
-      usernameField.value = '';
-      fullNameField.value = '';
-      iconSelectField.value = '';
-
-      // Close the dialog
-      addPlayerDialog.close();
+      await this.playerManager.addPlayer(newPlayer);
+      // Update UI
+      this.updatePlayerList();
+      this.closeAddPlayerDialog();
     } catch (error) {
-      console.error('Error adding player:', error);
       alert(`Error adding player: ${error.message}`);
     }
-  });
+  }
 
-      // Function to populate the remove player list
-  function populateRemovePlayerList() {
+  // Open the Remove Player Dialog
+  openRemovePlayerDialog() {
+    this.populateRemovePlayerList();
+    this.removePlayerDialog.show();
+  }
+
+  // Close the Remove Player Dialog
+  closeRemovePlayerDialog() {
+    this.removePlayerDialog.close();
+  }
+
+  // Populate the Remove Player list with current players
+  populateRemovePlayerList() {
+    const players = this.playerManager.getPlayers();
     // Clear the existing list
-    removePlayerList.innerHTML = '';
-  
+    this.removePlayerList.innerHTML = '';
+
     // Loop through the players and create list items
     players.forEach(player => {
       const listItem = document.createElement('md-list-item');
-  
+
       // Create the headline (player's username)
       const headline = document.createElement('div');
       headline.setAttribute('slot', 'headline');
       headline.textContent = player.username;
-  
+
       // Create the delete icon button
       const deleteButton = document.createElement('md-icon-button');
       deleteButton.setAttribute('slot', 'end'); // Align to the end
       deleteButton.setAttribute('aria-label', 'Delete Player');
       deleteButton.innerHTML = '<md-icon>delete_forever</md-icon>';
-  
+
       // Add event listener to the delete button
       deleteButton.addEventListener('click', () => {
-        confirmDeletePlayer(player);
+        this.confirmDeletePlayer(player);
       });
-  
+
       // Append elements to the list item
       listItem.appendChild(headline);
       listItem.appendChild(deleteButton);
-  
+
       // Append the list item to the remove player list
-      removePlayerList.appendChild(listItem);
+      this.removePlayerList.appendChild(listItem);
     });
   }
 
-  // Function to confirm player deletion
-  function confirmDeletePlayer(player) {
+  // Confirm player deletion
+  confirmDeletePlayer(player) {
     const confirmation = confirm(`Are you sure you want to delete ${player.username}? This action cannot be undone.`);
     if (confirmation) {
-      deletePlayer(player.player_id);
+      this.deletePlayer(player.player_id);
     }
   }
-  
-  // Function to delete player
-  async function deletePlayer(playerId) {
+
+  // Delete a player and update the UI
+  async deletePlayer(playerId) {
     try {
-      // Send DELETE request to the backend
-      const response = await fetch(`http://localhost:3000/api/players/${playerId}`, {
-        method: 'DELETE',
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to delete player');
-      }
-  
-      // Remove the player from the players array
-      players = players.filter(player => player.player_id !== playerId);
-  
-      // Update the player list UI
-      if (currentSelectedTournament) {
-        const playerIds = currentSelectedTournament.players;
-        const tournamentPlayers = players.filter(player => playerIds.includes(player.player_id));
-        populatePlayerList(tournamentPlayers);
-      } else {
-        populatePlayerList(players);
-      }
-  
-      // Refresh the remove player list
-      populateRemovePlayerList();
-  
+      await this.playerManager.deletePlayer(playerId);
+      // Update UI
+      this.updatePlayerList();
+      this.populateRemovePlayerList();
       alert('Player deleted successfully.');
     } catch (error) {
-      console.error('Error deleting player:', error);
       alert(`Error deleting player: ${error.message}`);
     }
   }
-  
 
-
-  // Function to load tournaments data
-  async function loadTournaments() {
-    try {
-      const response = await fetch('http://localhost:3000/api/tournaments');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const tournamentsData = await response.json();
-      tournaments = tournamentsData.tournaments; // Store the array of tournaments
-      return tournaments;
-    } catch (error) {
-      console.error('Failed to load tournaments:', error);
-      tournamentNameElement.textContent = "Failed to load tournaments.";
-      return [];
-    }
-  }
-
-  // Function to load players data
-  async function loadPlayers() {
-    try {
-      const response = await fetch('http://localhost:3000/api/players');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const playersData = await response.json();
-      players = playersData.players; // Store the array of players
-      return players;
-    } catch (error) {
-      console.error('Failed to load players:', error);
-      return [];
-    }
-  }
-
-  // Load tournaments and players data in parallel
-  Promise.all([loadTournaments(), loadPlayers()]).then(() => {
-    if (tournaments.length > 0) {
-      populateTournamentSelect(tournaments);
-    } else {
-      tournamentNameElement.textContent = "No Tournaments Available";
-      tournamentSelectField.disabled = true;
-    }
-
-    // Populate the player list with all players if no tournament is selected
-    if (!currentSelectedTournament) {
-      populatePlayerList(players);
-    }
-  });
-
-  // Function to populate the tournament select field
-  function populateTournamentSelect(tournaments) {
+  // Populate the tournament select field
+  populateTournamentSelect() {
+    const tournaments = this.tournamentManager.getTournaments();
     // Clear any existing options
-    tournamentSelectField.innerHTML = '';
+    this.tournamentSelectField.innerHTML = '';
 
     // Add a default "Select" option
     const defaultOption = document.createElement('md-select-option');
     defaultOption.value = '';
     defaultOption.textContent = '-- Select a Tournament --';
-    tournamentSelectField.appendChild(defaultOption);
+    this.tournamentSelectField.appendChild(defaultOption);
 
     tournaments.forEach(tournament => {
       const option = document.createElement('md-select-option');
       option.value = tournament.tournament_id;
       option.textContent = tournament.name;
-      tournamentSelectField.appendChild(option);
+      this.tournamentSelectField.appendChild(option);
     });
   }
 
-  // Function to handle tournament selection
-  function handleTournamentSelection(selectedTournamentId) {
-    // Find the selected tournament in the tournaments array
-    currentSelectedTournament = tournaments.find(tournament => tournament.tournament_id == selectedTournamentId);
-    if (currentSelectedTournament) {
-      tournamentNameElement.textContent = currentSelectedTournament.name;
-      currentTournamentName = currentSelectedTournament.name;
-
-      // Get the list of player IDs for the selected tournament
-      const playerIds = currentSelectedTournament.players;
-
-      // Filter the players who are in the selected tournament
-      const tournamentPlayers = players.filter(player => playerIds.includes(player.player_id));
-
-      // Populate the player list
-      populatePlayerList(tournamentPlayers);
+  // Handle tournament selection change
+  handleTournamentSelection(selectedTournamentId) {
+    const selectedTournament = this.tournamentManager.selectTournament(selectedTournamentId);
+    if (selectedTournament) {
+      this.tournamentNameElement.textContent = selectedTournament.name;
     } else {
-      tournamentNameElement.textContent = "Select a Tournament";
-      currentSelectedTournament = null;
-      // Populate the player list with all players
-      populatePlayerList(players);
+      this.tournamentNameElement.textContent = "Select a Tournament";
     }
+    this.updatePlayerList();
   }
 
-  // Function to populate the player list
-  function populatePlayerList(tournamentPlayers) {
-    // Clear the existing player list
-    playerListElement.innerHTML = '';
+  // Update the player list based on the selected tournament
+  updatePlayerList() {
+    const currentTournament = this.tournamentManager.getCurrentTournament();
+    const allPlayers = this.playerManager.getPlayers();
+    let playersToDisplay;
 
-    if (tournamentPlayers.length === 0) {
+    if (currentTournament) {
+      const playerIds = currentTournament.players;
+      playersToDisplay = allPlayers.filter(player => playerIds.includes(player.player_id));
+    } else {
+      playersToDisplay = allPlayers;
+    }
+
+    this.populatePlayerList(playersToDisplay);
+  }
+
+  // Populate the player list in the UI
+  populatePlayerList(players) {
+    // Clear the existing player list
+    this.playerListElement.innerHTML = '';
+
+    if (players.length === 0) {
       // If no players, display a message
       const listItem = document.createElement('md-list-item');
       listItem.textContent = 'No players registered.';
-      playerListElement.appendChild(listItem);
+      this.playerListElement.appendChild(listItem);
       return;
     }
 
     // Loop through the players and create list items
-    tournamentPlayers.forEach(player => {
+    players.forEach(player => {
       const listItem = document.createElement('md-list-item');
 
       // Create the icon
@@ -298,7 +376,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Create the supporting text (player's statistics)
       const supportingText = document.createElement('div');
       supportingText.setAttribute('slot', 'supporting-text');
-      supportingText.textContent = `Wins: ${player.statistics.wins}, Losses: ${player.statistics.losses}, Draws: ${player.statistics.draws}`;
+      const stats = player.statistics || { wins: 0, losses: 0, draws: 0 };
+      supportingText.textContent = `Wins: ${stats.wins}, Losses: ${stats.losses}, Draws: ${stats.draws}`;
 
       // Append elements to the list item
       listItem.appendChild(icon);
@@ -306,13 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
       listItem.appendChild(supportingText);
 
       // Append the list item to the player list
-      playerListElement.appendChild(listItem);
+      this.playerListElement.appendChild(listItem);
     });
   }
-
-  // Add event listener for selection change
-  tournamentSelectField.addEventListener('change', (event) => {
-    const selectedTournamentId = event.target.value;
-    handleTournamentSelection(selectedTournamentId);
-  });
-});
+}

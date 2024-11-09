@@ -1,4 +1,5 @@
 // server.js
+// in Terminal navigate to => command: cd backend
 // run the server.js with Node => command: node server.js
 
 const express = require('express');

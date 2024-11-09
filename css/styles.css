@@ -57,9 +57,25 @@ body {
     align-items: center; /* Center vertically */
 }
 
+/* Align Center */
+.aligncenter {
+    display: flex; /* Enable flexbox for centering */
+    align-items: center; /* Center vertically */
+}
+
+.side-box {
+    margin-right: 8px;
+  }
+
 /* Gap utility class for spacing */
 .g8 {
+    display: flex;
     border: 8px; /* Space between flex items */
+}
+
+/* Padding utility class */
+.p8 {
+    padding: 8px; /* Padding around elements */
 }
 
 /* Padding utility class */
