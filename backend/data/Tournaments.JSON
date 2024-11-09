@@ -1,48 +1,70 @@
 {
-    "tournaments": [
-        {
-            "tournament_id": 101,
-            "name": "Bloomburrow Championship 2024",
-            "created_at": "2024-06-25T12:00:00Z",
-            "start_date": "2024-07-01T10:00:00Z",
-            "end_date": "2024-07-10T18:00:00Z",
-            "rounds": 3,
-            "status": "Ongoing",
-            "current_round": 2,
-            "players": [1, 2, 3, 4, 5, 6]
-        },
-        {
-            "tournament_id": 102,
-            "name": "Innistrad Draft 2024",
-            "created_at": "2024-07-15T10:00:00Z",
-            "start_date": "2024-08-05T09:00:00Z",
-            "end_date": "2024-08-15T17:00:00Z",
-            "rounds": 3,
-            "status": "Upcoming",
-            "current_round": 0,
-            "players": [2, 6, 7]
-        },
-        {
-            "tournament_id": 103,
-            "name": "Winter Warfare 2024",
-            "created_at": "2024-09-20T11:00:00Z",
-            "start_date": "2024-10-01T10:00:00Z",
-            "end_date": "2024-10-10T20:00:00Z",
-            "rounds": 3,
-            "status": "Completed",
-            "current_round": 3,
-            "players": [1, 3, 5, 6, 7]
-        },
-        {
-            "tournament_id": 104,
-            "name": "Summer Slam 2024",
-            "created_at": "2024-06-10T14:00:00Z",
-            "start_date": "2024-07-20T10:00:00Z",
-            "end_date": "2024-07-30T18:00:00Z",
-            "rounds": 3,
-            "status": "Completed",
-            "current_round": 3,
-            "players": [1, 2, 4, 5, 6, 7]
-        }
-    ]
+  "tournaments": [
+    {
+      "tournament_id": 101,
+      "name": "Bloomburrow Championship 2024",
+      "created_at": "2024-06-25T12:00:00Z",
+      "start_date": "2024-07-01T10:00:00Z",
+      "end_date": "2024-07-10T18:00:00Z",
+      "rounds": 3,
+      "status": "Ongoing",
+      "current_round": 2,
+      "players": [
+        1,
+        3,
+        4,
+        6
+      ]
+    },
+    {
+      "tournament_id": 102,
+      "name": "Innistrad Draft 2024",
+      "created_at": "2024-07-15T10:00:00Z",
+      "start_date": "2024-08-05T09:00:00Z",
+      "end_date": "2024-08-15T17:00:00Z",
+      "rounds": 3,
+      "status": "Upcoming",
+      "current_round": 0,
+      "players": [
+        2,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "tournament_id": 103,
+      "name": "Winter Warfare 2024",
+      "created_at": "2024-09-20T11:00:00Z",
+      "start_date": "2024-10-01T10:00:00Z",
+      "end_date": "2024-10-10T20:00:00Z",
+      "rounds": 3,
+      "status": "Completed",
+      "current_round": 3,
+      "players": [
+        2,
+        4,
+        6,
+        7
+      ]
+    },
+    {
+      "tournament_id": 104,
+      "name": "Summer Slam 2024",
+      "created_at": "2024-06-10T14:00:00Z",
+      "start_date": "2024-07-20T10:00:00Z",
+      "end_date": "2024-07-30T18:00:00Z",
+      "rounds": 3,
+      "status": "Completed",
+      "current_round": 3,
+      "players": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7
+      ]
+    }
+  ]
 }

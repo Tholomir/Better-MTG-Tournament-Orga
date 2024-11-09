@@ -117,6 +117,30 @@ class TournamentManager {
   getCurrentTournament() {
     return this.currentSelectedTournament;
   }
+
+  // Update the players of a tournament
+  async updateTournamentPlayers(tournamentId, playerIds) {
+    try {
+      const response = await fetch(`http://localhost:3000/api/tournaments/${tournamentId}/players`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ players: playerIds })
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update tournament players');
+      }
+      // Update the local tournament data
+      const tournament = this.tournaments.find(t => t.tournament_id === tournamentId);
+      if (tournament) {
+        tournament.players = playerIds;
+      }
+    } catch (error) {
+      console.error('Error updating tournament players:', error);
+      throw error;
+    }
+  }
+
 }
 
 // UIManager class handles UI interactions and updates
@@ -153,6 +177,13 @@ class UIManager {
     this.removePlayerDialog = document.getElementById('removePlayerDialog');
     this.removePlayerList = document.getElementById('removePlayerList');
     this.cancelRemovePlayerButton = document.getElementById('cancelRemovePlayerButton');
+
+    // Tournament Players Dialog elements
+    this.tournamentPlayersButton = document.getElementById('tournamentPlayersButton');
+    this.tournamentPlayersDialog = document.getElementById('tournamentPlayersDialog');
+    this.tournamentPlayersList = document.getElementById('tournamentPlayersList');
+    this.cancelTournamentPlayersButton = document.getElementById('cancelTournamentPlayersButton');
+    this.saveTournamentPlayersButton = document.getElementById('saveTournamentPlayersButton');
   }
 
   // Bind event listeners to UI elements
@@ -171,7 +202,17 @@ class UIManager {
       const selectedTournamentId = event.target.value;
       this.handleTournamentSelection(selectedTournamentId);
     });
+
+    // Tournament Players Dialog
+    this.tournamentPlayersButton.addEventListener('click', () => this.openTournamentPlayersDialog());
+    this.cancelTournamentPlayersButton.addEventListener('click', () => this.closeTournamentPlayersDialog());
+    this.saveTournamentPlayersButton.addEventListener('click', () => this.saveTournamentPlayers());
+
+    // Disable the tournamentPlayersButton if no tournament is selected
+    this.tournamentPlayersButton.disabled = true;
+
   }
+
 
   // Initialize the UI by loading data and populating elements
   async initialize() {
@@ -388,4 +429,117 @@ class UIManager {
       this.playerListElement.appendChild(listItem);
     });
   }
+
+  // Open the Tournament Players Dialog
+  openTournamentPlayersDialog() {
+    if (!this.tournamentManager.getCurrentTournament()) {
+      alert('Please select a tournament first.');
+      return;
+    }
+    this.populateTournamentPlayersList();
+    this.tournamentPlayersDialog.show();
+  }
+
+  // Close the Tournament Players Dialog
+  closeTournamentPlayersDialog() {
+    this.tournamentPlayersDialog.close();
+  }
+
+  populateTournamentPlayersList() {
+    const allPlayers = this.playerManager.getPlayers();
+    const currentTournament = this.tournamentManager.getCurrentTournament();
+    const tournamentPlayerIds = currentTournament.players || [];
+  
+    // Debug: Log current tournament and player IDs
+    console.log('Current Tournament:', currentTournament);
+    console.log('Tournament Player IDs:', tournamentPlayerIds);
+  
+    // Clear existing list
+    this.tournamentPlayersList.innerHTML = '';
+  
+    allPlayers.forEach(player => {
+      const listItem = document.createElement('md-list-item');
+  
+      // Player Name
+      const headline = document.createElement('div');
+      headline.setAttribute('slot', 'headline');
+      headline.textContent = player.username;
+  
+      // Participation Switch
+      const participationSwitch = document.createElement('md-switch');
+      participationSwitch.setAttribute('slot', 'end');
+  
+      // Ensure both IDs are of the same type
+      const playerId = Number(player.player_id);
+      const tournamentPlayerIdsNumeric = tournamentPlayerIds.map(id => Number(id));
+  
+      // Use 'selected' instead of 'checked'
+      participationSwitch.selected = tournamentPlayerIdsNumeric.includes(playerId);
+  
+      // Debug: Log player ID and switch status
+      console.log(`Player ID: ${playerId}, Switch Selected: ${participationSwitch.selected}`);
+  
+      // Append elements to list item
+      listItem.appendChild(headline);
+      listItem.appendChild(participationSwitch);
+  
+      // Append list item to the list
+      this.tournamentPlayersList.appendChild(listItem);
+    });
+  }
+  
+
+  async saveTournamentPlayers() {
+    const currentTournament = this.tournamentManager.getCurrentTournament();
+    if (!currentTournament) {
+      alert('No tournament selected.');
+      return;
+    }
+  
+    // Get the updated list of player IDs from the switches
+    const switches = this.tournamentPlayersList.querySelectorAll('md-switch');
+    const updatedPlayerIds = [];
+  
+    switches.forEach((switchElement, index) => {
+      const player = this.playerManager.getPlayers()[index];
+      if (switchElement.selected) {
+        updatedPlayerIds.push(Number(player.player_id));
+      }
+    });
+  
+    // Update the tournament's players array
+    currentTournament.players = updatedPlayerIds;
+  
+    try {
+      // Send PUT request to update the tournament on the backend
+      await this.tournamentManager.updateTournamentPlayers(currentTournament.tournament_id, updatedPlayerIds);
+  
+      // Optionally reload tournaments to ensure data consistency
+      await this.tournamentManager.loadTournaments();
+  
+      // Update UI
+      this.updatePlayerList();
+      this.closeTournamentPlayersDialog();
+      alert('Tournament players updated successfully.');
+    } catch (error) {
+      console.error('Error updating tournament players:', error);
+      alert(`Error updating tournament players: ${error.message}`);
+    }
+  }
+
+    // Handle tournament selection change
+    handleTournamentSelection(selectedTournamentId) {
+      const selectedTournament = this.tournamentManager.selectTournament(selectedTournamentId);
+      if (selectedTournament) {
+        this.tournamentNameElement.textContent = selectedTournament.name;
+        // Enable the tournamentPlayersButton when a tournament is selected
+        this.tournamentPlayersButton.disabled = false;
+      } else {
+        this.tournamentNameElement.textContent = "Select a Tournament";
+        // Disable the tournamentPlayersButton when no tournament is selected
+        this.tournamentPlayersButton.disabled = true;
+      }
+      this.updatePlayerList();
+    }
+
 }
