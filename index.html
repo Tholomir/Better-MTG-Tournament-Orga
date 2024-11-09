@@ -137,6 +137,27 @@
   </div>
 </md-dialog>
 
+<!-- Create Tournament Dialog -->
+<md-dialog id="createTournamentDialog" aria-labelledby="createTournamentDialogTitle" role="dialog">
+  <div slot="headline" id="createTournamentDialogTitle">Create New Tournament</div>
+  <div slot="content">
+    <md-outlined-text-field
+      label="Tournament Name"
+      id="tournamentNameField"
+      required
+      aria-required="true">
+    </md-outlined-text-field>
+  </div>
+  <div slot="actions">
+    <md-text-button id="cancelCreateTournamentButton" dialogAction="cancel">
+      Cancel
+    </md-text-button>
+    <md-filled-button id="confirmCreateTournamentButton">
+      Create Tournament
+    </md-filled-button>
+  </div>
+</md-dialog>
+
 
 <!-- Last Column (Tournament): -->
   <div class="col-sm-5 border p8">
