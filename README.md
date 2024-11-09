@@ -52,39 +52,32 @@ This project is a web application for managing tournaments, players, and matches
 * **Filter Matches:** Filter match results by tournament ID.
 
 ## File Structure
-backend/
-│
+```backend/
 ├── data/
 │   ├── Matches.JSON
 │   ├── Players.JSON
 │   └── Tournaments.JSON
-│
 ├── node_modules/
-│
 ├── package-lock.json
 ├── package.json
 ├── server.js
-│
 ├── css/
 │   ├── dark.css
 │   ├── light.css
 │   └── styles.css
-│
 ├── js/
 │   ├── main.js
 │   ├── MatchManager.js
 │   ├── PlayerManager.js
 │   ├── TournamentManager.js
 │   └── UIManager.js
-│
 ├── material/
-│
 ├── .gitignore
 ├── index.html
 ├── README.md
 ├── requirements01.txt
 └── TournamentOrgaApp_icon.png
-
+```
 
 ## Backend Data Structure
 
