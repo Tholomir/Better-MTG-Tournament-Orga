@@ -77,6 +77,12 @@ export default class UIManager {
 
     // Disable the tournamentPlayersButton if no tournament is selected
     this.tournamentPlayersButton.disabled = true;
+
+      // Delete Tournament Button
+  this.deleteTournamentButton = document.getElementById('deleteTournamentButton');
+
+  // Disable the deleteTournamentButton if no tournament is selected
+  this.deleteTournamentButton.disabled = true;
   }
 
   // Bind event listeners to UI elements
@@ -127,6 +133,10 @@ export default class UIManager {
     this.cancelCreateTournamentButton.addEventListener('click', () =>
       this.closeCreateTournamentDialog()
     );
+
+    // Delete Tournament Button
+    this.deleteTournamentButton.addEventListener('click', () =>
+      this.handleDeleteTournament());
   }
 
   // Initialize the UI by loading data and populating elements
@@ -277,22 +287,24 @@ export default class UIManager {
     });
   }
 
-  // Handle tournament selection change
-  handleTournamentSelection(selectedTournamentId) {
-    const selectedTournament = this.tournamentManager.selectTournament(
-      selectedTournamentId
-    );
-    if (selectedTournament) {
-      this.tournamentNameElement.textContent = selectedTournament.name;
-      // Enable the tournamentPlayersButton when a tournament is selected
-      this.tournamentPlayersButton.disabled = false;
-    } else {
-      this.tournamentNameElement.textContent = 'Select a Tournament';
-      // Disable the tournamentPlayersButton when no tournament is selected
-      this.tournamentPlayersButton.disabled = true;
-    }
-    this.updatePlayerList();
+// Handle tournament selection change
+handleTournamentSelection(selectedTournamentId) {
+  const selectedTournament = this.tournamentManager.selectTournament(
+    selectedTournamentId
+  );
+  if (selectedTournament) {
+    this.tournamentNameElement.textContent = selectedTournament.name;
+    // Enable the tournamentPlayersButton and deleteTournamentButton when a tournament is selected
+    this.tournamentPlayersButton.disabled = false;
+    this.deleteTournamentButton.disabled = false;
+  } else {
+    this.tournamentNameElement.textContent = 'Select a Tournament';
+    // Disable the tournamentPlayersButton and deleteTournamentButton when no tournament is selected
+    this.tournamentPlayersButton.disabled = true;
+    this.deleteTournamentButton.disabled = true;
   }
+  this.updatePlayerList();
+}
 
   // Update the player list based on the selected tournament
   updatePlayerList() {
@@ -493,4 +505,43 @@ export default class UIManager {
       alert(`Error creating tournament: ${error.message}`);
     }
   }
+
+
+  // Handle the deletion of the currently selected tournament.
+  // Prompts the user for confirmation before proceeding.
+ 
+    async handleDeleteTournament() {
+      const currentTournament = this.tournamentManager.getCurrentTournament();
+      
+      if (!currentTournament) {
+        alert('No tournament is currently selected.');
+        return;
+      }
+
+      const confirmation = confirm(`Are you sure you want to delete the tournament "${currentTournament.name}"? This action cannot be undone.`);
+
+      if (!confirmation) {
+        return; // User canceled the deletion
+      }
+
+      try {
+        await this.tournamentManager.deleteTournament(currentTournament.tournament_id);
+        alert(`Tournament "${currentTournament.name}" has been deleted successfully.`);
+
+        // Refresh the tournaments list in the UI
+        await this.tournamentManager.loadTournaments();
+        this.populateTournamentSelect();
+
+        // Reset the UI to default state
+        this.tournamentNameElement.textContent = 'Select a Tournament';
+        this.tournamentSelectField.value = '';
+        this.tournamentPlayersButton.disabled = true;
+        this.deleteTournamentButton.disabled = true;
+        this.updatePlayerList();
+      } catch (error) {
+        console.error('Error deleting tournament:', error);
+        alert(`Failed to delete tournament: ${error.message}`);
+      }
+    }
+
 }
