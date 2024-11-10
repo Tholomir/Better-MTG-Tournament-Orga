@@ -12,10 +12,21 @@ export default class PlayerManager {
   async loadPlayers() {
     console.log('Loading players from backend.');
     try {
-      const response = await fetch(this.apiBaseUrl);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      const response = await fetch(this.apiBaseUrl, {
+        headers: {
+          'Cache-Control': 'no-cache', // Ensure fresh data
+        },
+      });
+
+      if (response.status === 304) {
+        console.log('Players data not modified. Using cached data.');
+        return this.players;
       }
+
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+
       const playersData = await response.json();
       this.players = playersData.players.map(player => ({
         ...player,

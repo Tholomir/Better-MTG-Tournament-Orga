@@ -6,6 +6,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto'); // For ETag generation
 
 const app = express();
 const PORT = 3000; // You can change this if needed
@@ -70,13 +71,33 @@ const writeJSONFile = (filePath, data) => {
   });
 };
 
+/**
+ * Helper function to generate ETag for a given data.
+ * @param {Object} data - The data to generate ETag for.
+ * @returns {string} - The generated ETag.
+ */
+const generateETag = (data) => {
+  return crypto.createHash('md5').update(JSON.stringify(data)).digest('hex');
+};
+
 // -------------------- Players Endpoints --------------------
 
-// Endpoint to get all players
+// Endpoint to get all players with caching
 app.get('/api/players', async (req, res) => {
   try {
     const playersData = await readJSONFile(playersFilePath);
-    res.json(playersData); // Return the entire players data
+    const etag = generateETag(playersData);
+
+    // Check for If-None-Match header
+    if (req.headers['if-none-match'] === etag) {
+      return res.status(304).end(); // Not Modified
+    }
+
+    // Set Cache-Control and ETag headers
+    res.setHeader('Cache-Control', 'public, max-age=300'); // Cache for 5 minutes
+    res.setHeader('ETag', etag);
+
+    res.status(200).json(playersData); // Ensure status is 200
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -150,6 +171,32 @@ app.delete('/api/players/:id', async (req, res) => {
     // Write the updated data back to Players.JSON
     await writeJSONFile(playersFilePath, playersData);
 
+    // ------------------ New Code Starts Here ------------------
+
+    // Now, also remove the player from any tournament's "players" array
+    const tournamentsData = await readJSONFile(tournamentsFilePath);
+    let tournaments = tournamentsData.tournaments;
+
+    let tournamentsUpdated = false;
+
+    tournaments.forEach((tournament) => {
+      const index = tournament.players.indexOf(playerId);
+      if (index !== -1) {
+        tournament.players.splice(index, 1);
+        tournamentsUpdated = true;
+        console.log(
+          `Removed Player ID ${playerId} from Tournament ID ${tournament.tournament_id}`
+        );
+      }
+    });
+
+    if (tournamentsUpdated) {
+      await writeJSONFile(tournamentsFilePath, tournamentsData);
+      console.log(`Player ID ${playerId} removed from tournaments.`);
+    }
+
+    // ------------------ New Code Ends Here ------------------
+
     res.json({ message: 'Player deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -158,11 +205,22 @@ app.delete('/api/players/:id', async (req, res) => {
 
 // -------------------- Tournaments Endpoints --------------------
 
-// Endpoint to get all tournaments
+// Endpoint to get all tournaments with caching
 app.get('/api/tournaments', async (req, res) => {
   try {
     const tournamentsData = await readJSONFile(tournamentsFilePath);
-    res.json(tournamentsData); // Return the entire tournaments data
+    const etag = generateETag(tournamentsData);
+
+    // Check for If-None-Match header
+    if (req.headers['if-none-match'] === etag) {
+      return res.status(304).end(); // Not Modified
+    }
+
+    // Set Cache-Control and ETag headers
+    res.setHeader('Cache-Control', 'public, max-age=300'); // Cache for 5 minutes
+    res.setHeader('ETag', etag);
+
+    res.status(200).json(tournamentsData); // Ensure status is 200
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
