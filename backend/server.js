@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto'); // For ETag generation
+const compression = require('compression');
+const morgan = require('morgan'); // Optional: For logging
 
 const app = express();
 const PORT = 3000; // You can change this if needed
@@ -15,10 +17,18 @@ const PORT = 3000; // You can change this if needed
 app.use(
   cors({
     origin: ['http://localhost:5500', 'http://127.0.0.1:5500'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'cache-control'],
   })
 );
 
 app.use(bodyParser.json());
+
+// Use compression middleware
+app.use(compression());
+
+// Use morgan for HTTP request logging
+app.use(morgan('combined'));
 
 // Paths to JSON files
 const playersFilePath = path.join(__dirname, 'data', 'Players.JSON');
@@ -72,32 +82,52 @@ const writeJSONFile = (filePath, data) => {
 };
 
 /**
- * Helper function to generate ETag for a given data.
- * @param {Object} data - The data to generate ETag for.
+ * Helper function to generate ETag based on file's last modified time.
  * @returns {string} - The generated ETag.
  */
-const generateETag = (data) => {
-  return crypto.createHash('md5').update(JSON.stringify(data)).digest('hex');
+const generateETag = () => {
+  const stats = fs.statSync(playersFilePath);
+  return stats.mtimeMs.toString();
 };
+
+// -------------------- In-Memory Cache Initialization --------------------
+
+let playersCache = [];
+let playersEtag = '';
+
+const loadPlayersIntoCache = async () => {
+  try {
+    const playersData = await readJSONFile(playersFilePath);
+    playersCache = playersData.players.map(player => ({
+      ...player,
+      player_id: Number(player.player_id),
+    }));
+    playersEtag = generateETag();
+    console.log('Players data loaded into in-memory cache.');
+  } catch (error) {
+    console.error('Failed to load players into cache:', error);
+  }
+};
+
+// Load players into cache on server start
+loadPlayersIntoCache();
 
 // -------------------- Players Endpoints --------------------
 
 // Endpoint to get all players with caching
 app.get('/api/players', async (req, res) => {
   try {
-    const playersData = await readJSONFile(playersFilePath);
-    const etag = generateETag(playersData);
-
     // Check for If-None-Match header
-    if (req.headers['if-none-match'] === etag) {
+    if (req.headers['if-none-match'] === playersEtag) {
       return res.status(304).end(); // Not Modified
     }
 
     // Set Cache-Control and ETag headers
     res.setHeader('Cache-Control', 'public, max-age=300'); // Cache for 5 minutes
-    res.setHeader('ETag', etag);
+    res.setHeader('ETag', playersEtag);
 
-    res.status(200).json(playersData); // Ensure status is 200
+    // Serve players from cache
+    res.status(200).json({ players: playersCache });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -113,18 +143,13 @@ app.post('/api/players', async (req, res) => {
   }
 
   try {
-    const playersData = await readJSONFile(playersFilePath);
-    const players = playersData.players;
-
-    // Determine the next player_id
+    // Assign player_id
     const nextPlayerId =
-      players.length > 0 ? players[players.length - 1].player_id + 1 : 1;
+      playersCache.length > 0 ? playersCache[playersCache.length - 1].player_id + 1 : 1;
     newPlayer.player_id = nextPlayerId;
 
-    // Set registration_date to current date and time
+    // Set registration_date and initialize fields
     newPlayer.registration_date = new Date().toISOString();
-
-    // Initialize statistics and achievements
     newPlayer.statistics = {
       total_matches: 0,
       wins: 0,
@@ -134,15 +159,17 @@ app.post('/api/players', async (req, res) => {
     };
     newPlayer.achievements = [];
 
-    // Add the new player to the array
-    players.push(newPlayer);
+    // Add to in-memory cache
+    playersCache.push(newPlayer);
 
-    // Write the updated data back to Players.JSON
+    // Regenerate ETag
+    playersEtag = generateETag();
+
+    // Also write to Players.JSON
+    const playersData = { players: playersCache };
     await writeJSONFile(playersFilePath, playersData);
 
-    res
-      .status(201)
-      .json({ message: 'Player added successfully', player: newPlayer });
+    res.status(201).json({ message: 'Player added successfully', player: newPlayer });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -153,40 +180,34 @@ app.delete('/api/players/:id', async (req, res) => {
   const playerId = parseInt(req.params.id, 10);
 
   try {
-    const playersData = await readJSONFile(playersFilePath);
-    let players = playersData.players;
-
-    // Find the index of the player to be deleted
-    const playerIndex = players.findIndex(
-      (player) => player.player_id === playerId
-    );
+    // Find the player in cache
+    const playerIndex = playersCache.findIndex(player => player.player_id === playerId);
 
     if (playerIndex === -1) {
       return res.status(404).json({ message: 'Player not found' });
     }
 
-    // Remove the player from the array
-    players.splice(playerIndex, 1);
+    // Remove from cache
+    playersCache.splice(playerIndex, 1);
 
-    // Write the updated data back to Players.JSON
+    // Regenerate ETag
+    playersEtag = generateETag();
+
+    // Write updated cache back to Players.JSON
+    const playersData = { players: playersCache };
     await writeJSONFile(playersFilePath, playersData);
 
-    // ------------------ New Code Starts Here ------------------
-
-    // Now, also remove the player from any tournament's "players" array
+    // Remove player from all tournaments
     const tournamentsData = await readJSONFile(tournamentsFilePath);
     let tournaments = tournamentsData.tournaments;
-
     let tournamentsUpdated = false;
 
-    tournaments.forEach((tournament) => {
+    tournaments.forEach(tournament => {
       const index = tournament.players.indexOf(playerId);
       if (index !== -1) {
         tournament.players.splice(index, 1);
         tournamentsUpdated = true;
-        console.log(
-          `Removed Player ID ${playerId} from Tournament ID ${tournament.tournament_id}`
-        );
+        console.log(`Removed Player ID ${playerId} from Tournament ID ${tournament.tournament_id}`);
       }
     });
 
@@ -194,8 +215,6 @@ app.delete('/api/players/:id', async (req, res) => {
       await writeJSONFile(tournamentsFilePath, tournamentsData);
       console.log(`Player ID ${playerId} removed from tournaments.`);
     }
-
-    // ------------------ New Code Ends Here ------------------
 
     res.json({ message: 'Player deleted successfully' });
   } catch (error) {
@@ -373,7 +392,7 @@ app.put('/api/tournaments/:tournamentId/players', async (req, res) => {
     }
 
     // Update the players array
-    tournament.players = players;
+    tournament.players = players.map(id => Number(id));
 
     // Write the updated data back to Tournaments.JSON
     await writeJSONFile(tournamentsFilePath, tournamentsData);
