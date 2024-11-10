@@ -5,6 +5,8 @@ export default class TournamentManager {
     this.tournaments = [];
     this.currentSelectedTournament = null;
     this.apiBaseUrl = 'http://localhost:3000/api/tournaments';
+
+    console.log('TournamentManager initialized.');
   }
 
   /**
@@ -13,6 +15,7 @@ export default class TournamentManager {
    * @returns {Promise<Array>} - Array of tournament objects.
    */
   async loadTournaments() {
+    console.log('Loading tournaments from backend.');
     try {
       const response = await fetch(this.apiBaseUrl);
       if (!response.ok) {
@@ -26,6 +29,7 @@ export default class TournamentManager {
         rounds: Number(tournament.rounds),
         current_round: Number(tournament.current_round),
       }));
+      console.log('Tournaments loaded:', this.tournaments);
       return this.tournaments;
     } catch (error) {
       console.error('Failed to load tournaments:', error);
@@ -49,9 +53,11 @@ export default class TournamentManager {
    */
   selectTournament(tournamentId) {
     const id = Number(tournamentId);
+    console.log(`Selecting tournament with ID: ${id}`);
     this.currentSelectedTournament = this.tournaments.find(
       t => t.tournament_id === id
     ) || null;
+    console.log('Current selected tournament:', this.currentSelectedTournament);
     return this.currentSelectedTournament;
   }
 
@@ -70,6 +76,7 @@ export default class TournamentManager {
    * @returns {Promise<Object>} - The newly created tournament object.
    */
   async createTournament(name) {
+    console.log(`Creating tournament with name: ${name}`);
     // Basic validation
     if (!name || typeof name !== 'string') {
       throw new Error('Invalid tournament name.');
@@ -103,6 +110,7 @@ export default class TournamentManager {
         current_round: 0,
       });
 
+      console.log('Tournament created:', createdTournament);
       return createdTournament;
     } catch (error) {
       console.error('Error creating tournament:', error);
@@ -118,6 +126,7 @@ export default class TournamentManager {
    */
   async deleteTournament(tournamentId) {
     const id = Number(tournamentId);
+    console.log(`Deleting tournament with ID: ${id}`);
     if (isNaN(id)) {
       throw new Error('Invalid tournament ID.');
     }
@@ -153,123 +162,6 @@ export default class TournamentManager {
   }
 
   /**
-   * Update tournament details.
-   * Sends a PUT request to the backend to update the tournament.
-   * @param {number|string} tournamentId - The ID of the tournament to update.
-   * @param {Object} updatedDetails - The details to update (e.g., name, status).
-   * @returns {Promise<Object>} - The updated tournament object.
-   */
-  async updateTournamentDetails(tournamentId, updatedDetails) {
-    const id = Number(tournamentId);
-    if (isNaN(id)) {
-      throw new Error('Invalid tournament ID.');
-    }
-
-    // Validate updatedDetails
-    if (
-      !updatedDetails ||
-      typeof updatedDetails !== 'object' ||
-      Array.isArray(updatedDetails)
-    ) {
-      throw new Error('Invalid updated details.');
-    }
-
-    try {
-      const response = await fetch(`${this.apiBaseUrl}/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedDetails),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to update tournament');
-      }
-
-      const updatedTournament = await response.json();
-
-      // Update the local tournament data
-      const index = this.tournaments.findIndex(
-        t => t.tournament_id === id
-      );
-      if (index !== -1) {
-        this.tournaments[index] = {
-          ...this.tournaments[index],
-          ...updatedTournament,
-        };
-      }
-
-      // If the updated tournament is the currently selected one, update the reference
-      if (
-        this.currentSelectedTournament &&
-        this.currentSelectedTournament.tournament_id === id
-      ) {
-        this.currentSelectedTournament = this.tournaments[index];
-      }
-
-      return updatedTournament;
-    } catch (error) {
-      console.error('Error updating tournament details:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Add players to a tournament.
-   * Sends a PATCH request to the backend to update the tournament's player list.
-   * @param {number|string} tournamentId - The ID of the tournament.
-   * @param {Array<number|string>} playerIds - Array of player IDs to add.
-   * @returns {Promise<Object>} - The updated tournament object.
-   */
-  async addPlayersToTournament(tournamentId, playerIds) {
-    const id = Number(tournamentId);
-    if (isNaN(id)) {
-      throw new Error('Invalid tournament ID.');
-    }
-
-    if (!Array.isArray(playerIds)) {
-      throw new Error('Player IDs must be an array.');
-    }
-
-    try {
-      const response = await fetch(
-        `${this.apiBaseUrl}/${id}/players`,
-        {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ players: playerIds.map(id => Number(id)) }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to add players to tournament');
-      }
-
-      const updatedTournament = await response.json();
-
-      // Update the local tournament data
-      const index = this.tournaments.findIndex(t => t.tournament_id === id);
-      if (index !== -1) {
-        this.tournaments[index].players = updatedTournament.players.map(id => Number(id));
-      }
-
-      // If the updated tournament is the currently selected one, update the reference
-      if (
-        this.currentSelectedTournament &&
-        this.currentSelectedTournament.tournament_id === id
-      ) {
-        this.currentSelectedTournament = this.tournaments[index];
-      }
-
-      return updatedTournament;
-    } catch (error) {
-      console.error('Error adding players to tournament:', error);
-      throw error;
-    }
-  }
-
-  /**
    * Update the players of a tournament.
    * Sends a PUT request to the backend to update the tournament's player list.
    * @param {number|string} tournamentId - The ID of the tournament.
@@ -278,6 +170,7 @@ export default class TournamentManager {
    */
   async updateTournamentPlayers(tournamentId, playerIds) {
     const id = Number(tournamentId);
+    console.log(`Updating players for tournament ID: ${id}`);
     if (isNaN(id)) {
       throw new Error('Invalid tournament ID.');
     }
@@ -314,6 +207,7 @@ export default class TournamentManager {
         this.currentSelectedTournament = this.tournaments[index];
       }
 
+      console.log('Tournament players updated:', updatedTournament);
       return updatedTournament;
     } catch (error) {
       console.error('Error updating tournament players:', error);
@@ -322,67 +216,43 @@ export default class TournamentManager {
   }
 
   /**
-   * Remove players from a tournament.
-   * Sends a PATCH request to the backend to update the tournament's player list.
-   * @param {number|string} tournamentId - The ID of the tournament.
-   * @param {Array<number|string>} playerIds - Array of player IDs to remove.
-   * @returns {Promise<Object>} - The updated tournament object.
+   * Add a single player to the currently selected tournament.
+   * @param {number} playerId - The ID of the player to add.
+   * @returns {Promise<void>}
    */
-  async removePlayersFromTournament(tournamentId, playerIds) {
-    const id = Number(tournamentId);
-    if (isNaN(id)) {
-      throw new Error('Invalid tournament ID.');
+  async addPlayerToTournament(playerId) {
+    console.log(`Adding player ID ${playerId} to current tournament.`);
+    if (!this.currentSelectedTournament) {
+      throw new Error('No tournament selected.');
     }
 
-    if (!Array.isArray(playerIds)) {
-      throw new Error('Player IDs must be an array.');
+    // Avoid adding duplicate players
+    if (this.currentSelectedTournament.players.includes(playerId)) {
+      throw new Error('Player is already participating in the tournament.');
     }
 
-    try {
-      // First, get the current players
-      const tournament = this.tournaments.find(t => t.tournament_id === id);
-      if (!tournament) {
-        throw new Error('Tournament not found.');
-      }
+    const updatedPlayerIds = [...this.currentSelectedTournament.players, playerId];
 
-      const updatedPlayers = tournament.players.filter(
-        pid => !playerIds.includes(pid)
-      );
+    await this.updateTournamentPlayers(this.currentSelectedTournament.tournament_id, updatedPlayerIds);
+  }
 
-      const response = await fetch(
-        `${this.apiBaseUrl}/${id}/players`,
-        {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ players: updatedPlayers }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to remove players from tournament');
-      }
-
-      const updatedTournament = await response.json();
-
-      // Update the local tournament data
-      const index = this.tournaments.findIndex(t => t.tournament_id === id);
-      if (index !== -1) {
-        this.tournaments[index].players = updatedTournament.players.map(id => Number(id));
-      }
-
-      // If the updated tournament is the currently selected one, update the reference
-      if (
-        this.currentSelectedTournament &&
-        this.currentSelectedTournament.tournament_id === id
-      ) {
-        this.currentSelectedTournament = this.tournaments[index];
-      }
-
-      return updatedTournament;
-    } catch (error) {
-      console.error('Error removing players from tournament:', error);
-      throw error;
+  /**
+   * Remove a single player from the currently selected tournament.
+   * @param {number} playerId - The ID of the player to remove.
+   * @returns {Promise<void>}
+   */
+  async removePlayerFromTournament(playerId) {
+    console.log(`Removing player ID ${playerId} from current tournament.`);
+    if (!this.currentSelectedTournament) {
+      throw new Error('No tournament selected.');
     }
+
+    if (!this.currentSelectedTournament.players.includes(playerId)) {
+      throw new Error('Player is not participating in the tournament.');
+    }
+
+    const updatedPlayerIds = this.currentSelectedTournament.players.filter(id => id !== playerId);
+
+    await this.updateTournamentPlayers(this.currentSelectedTournament.tournament_id, updatedPlayerIds);
   }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-  <!-- index.html -->
+<!-- index.html -->
 <html>
 <head>
   <title>Tournament Organizer</title>
@@ -104,21 +104,22 @@
 
 <!-- Middle Column (Tournament): -->
 <div class="col-sm-4 border p8">
-  <h3 id="tournamentName"></h3>
+  <h3 id="tournamentName">Select a Tournament</h3>
     <div class="aligncenter">
       <md-outlined-select
         class="side-box"
         label="Select a Tournament"
         id="tournamentSelectField"
         required>
+        <!-- Options will be populated dynamically -->
       </md-outlined-select>
-      <md-filled-tonal-icon-button id="tournamentPlayersButton" class="side-box">
+      <md-filled-tonal-icon-button id="tournamentPlayersButton" class="side-box" disabled>
         <md-icon>diversity_3</md-icon>
       </md-filled-tonal-icon-button>
       <md-filled-tonal-icon-button id="createNewTournamentButton" class="side-box">
         <md-icon>playlist_add</md-icon>
       </md-filled-tonal-icon-button>
-      <md-filled-tonal-icon-button id="deleteTournamentButton">
+      <md-filled-tonal-icon-button id="deleteTournamentButton" disabled>
         <md-icon>playlist_remove</md-icon>
       </md-filled-tonal-icon-button>
     </div>
@@ -135,8 +136,8 @@
     </md-list>
   </div>
   <div slot="actions">
-    <md-text-button id="cancelTournamentPlayersButton" dialogAction="cancel">Cancel</md-text-button>
-    <md-filled-button id="saveTournamentPlayersButton">Save</md-filled-button>
+    <!-- Only Close Button -->
+    <md-text-button id="closeTournamentPlayersButton">Close</md-text-button>
   </div>
 </md-dialog>
 
@@ -162,7 +163,7 @@
 </md-dialog>
 
 
-<!-- Last Column (Tournament): -->
+<!-- Last Column (Rankings): -->
   <div class="col-sm-5 border p8">
     <h3>Rankings</h3>
         <md-tabs>
